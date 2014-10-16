@@ -9,13 +9,13 @@ class TaskStatus(QObject):
         super().__init__(parent)
 
     def on_started(self):
-        self.parent.setTaskStatus(self.sender().description, self.sender().indefinite)
+        self.parent().setTaskStatus(self.sender().description, self.sender().indefinite)
 
     def on_progress(self, x):
-        self.parent.taskStatusProgress = x
+        self.parent().taskStatusProgress = x
 
-    def on_finished(self):
-        self.parent.clearTaskStatus()
+    def on_finished(self, result):
+        self.parent().clearTaskStatus()
 
 
 class Application(QGuiApplication):
@@ -27,7 +27,7 @@ class Application(QGuiApplication):
 
     def start(self):
         self.mainWindow = MainWindow(self)
-        self.taskStatus = TaskStatus(self.mainWindow)
+        self.taskStatus = TaskStatus(self.mainWindow.model)
         self.mainWindow.show()
 
 # TODO: use MetaClass model to handle notifyable properties

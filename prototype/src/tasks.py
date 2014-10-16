@@ -7,50 +7,61 @@ class Indefinite(QObject):
     '''
         Run task without blocking the UI
     '''
-    started = pyqtSignal(bool)
+    started = pyqtSignal()
     finished = pyqtSignal(object)
     progress = pyqtSignal(float)
+    indefinite = True
 
     def _operation(self):
-        return self.operation()
+        return self.operation(*self.args, **self.kwargs)
 
-    def __init__(self, operation):
+    def __init__(self, operation, description, args, kwargs):
         super().__init__()
         self.operation = operation
-        self.description = getattr(operation, "description", str(operation))
+        self.args = args
+        self.kwargs = kwargs
+        self.description = description
 
     def __call__(self):
         self.started.emit()
-        result = self._operation()
+        try:
+            result = self._operation()
+        except Exception as ex:
+            result = ex
         self.finished.emit(result)
 
 
 class Progressive(Indefinite):
+    indefinite = False
+
     def _operation(self):
-        return self.operation(lambda x: self.progress.emit(x))
+        self.kwargs["progress"] = lambda x: self.progress.emit(x)
+        return self.operation(*self.args, **self.kwargs)
 
 
 def task(klass, started=None, finished=None, progress=None):
     """
         Decorate a function to run in background
     """
-    def wire(operation):
-        task = klass(operation)
+    def decorate(operation):
+        def wrapper(*args, **kwargs):
+            description = getattr(wrapper, "description", str(operation))
+            task = klass(operation, description, args, kwargs)
 
-        if started:
-            task.started.connect(started)
+            if started:
+                task.started.connect(started)
 
-        if finished:
-            task.finished.connect(finished)
+            if finished:
+                task.finished.connect(finished)
 
-        if progress:
-            task.progress.connect(progress)
+            if progress:
+                task.progress.connect(progress)
 
-        def submit():
-            Application.instance().getTaskExecutor().submit(task)
+            return Application.instance().getTaskExecutor().submit(task)
 
-        return submit
-    return wire
+        return wrapper
+
+    return decorate
 
 
 def uitask(klass, started=None, finished=None, progress=None):
@@ -62,19 +73,19 @@ def uitask(klass, started=None, finished=None, progress=None):
         status = Application.instance().taskStatus
         status.on_started(*args, **kwargs)
         if started:
-            started()
+            started(*args, **kwargs)
 
     def on_finished(*args, **kwargs):
         status = Application.instance().taskStatus
         status.on_finished(*args, **kwargs)
         if finished:
-            finished()
+            finished(*args, **kwargs)
 
     def on_progress(*args, **kwargs):
         status = Application.instance().taskStatus
         status.on_progress(*args, **kwargs)
         if progress:
-            progress()
+            progress(*args, **kwargs)
 
     return task(klass,
                 started=on_started,
