@@ -104,8 +104,7 @@ Window {
 
                         Image {
                             source: "icons/minimize.svg"
-                            sourceSize.width: 10
-                            sourceSize.height: 10
+                            sourceSize: Qt.size(10, 10)
                             anchors.horizontalCenter: parent.horizontalCenter
                             anchors.verticalCenter: parent.verticalCenter
                         }
@@ -125,8 +124,7 @@ Window {
 
                         Image {
                             source: root.visibility == Window.Maximized ? "icons/restore.svg" : "icons/maximize.svg"
-                            sourceSize.width: 10
-                            sourceSize.height: 10
+                            sourceSize: Qt.size(10, 10)
                             anchors.horizontalCenter: parent.horizontalCenter
                             anchors.verticalCenter: parent.verticalCenter
                         }
@@ -146,8 +144,7 @@ Window {
 
                         Image {
                             source: "icons/close.svg"
-                            sourceSize.width: 10
-                            sourceSize.height: 10
+                            sourceSize: Qt.size(10, 10)
                             anchors.horizontalCenter: parent.horizontalCenter
                             anchors.verticalCenter: parent.verticalCenter
                         }
@@ -230,29 +227,25 @@ Window {
 
                 Image {
                     source: "icons/rss.svg"
-                    sourceSize.width: 32
-                    sourceSize.height: 32
+                    sourceSize: Qt.size(32, 32)
                     anchors.horizontalCenter: parent.horizontalCenter
                 }
 
                 Image {
                     source: "icons/lightbulb.svg"
-                    sourceSize.width: 32
-                    sourceSize.height: 32
+                    sourceSize: Qt.size(32, 32)
                     anchors.horizontalCenter: parent.horizontalCenter
                 }
 
                 Image {
                     source: "icons/point.svg"
-                    sourceSize.width: 32
-                    sourceSize.height: 32
+                    sourceSize: Qt.size(32, 32)
                     anchors.horizontalCenter: parent.horizontalCenter
                 }
 
                 Image {
                     source: "icons/world.svg"
-                    sourceSize.width: 32
-                    sourceSize.height: 32
+                    sourceSize: Qt.size(32, 32)
                     anchors.horizontalCenter: parent.horizontalCenter
                 }
             }
@@ -333,8 +326,7 @@ Window {
                 anchors.bottom: parent.bottom
                 anchors.rightMargin: 5
                 source: "icons/corner.svg"
-                sourceSize.width: label.height
-                sourceSize.height: label.height
+                sourceSize: Qt.size(label.height, label.height)
 
                 MouseArea {
                     anchors.fill: parent
