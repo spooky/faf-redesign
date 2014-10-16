@@ -32,6 +32,18 @@ Window {
         }
     }
 
+    Action {
+        id: toggleSideMenu
+        shortcut: "Ctrl+D"
+        onTriggered: {
+            if (sideMenu.state == "open") {
+                sideMenu.state = "closed"
+            } else {
+                sideMenu.state = "open"
+            }
+        }
+    }
+
     Rectangle {
         id: borderResizeHook // use to allow resizing through edge drag - not implemented yet
         anchors.fill: parent
@@ -77,13 +89,7 @@ Window {
 
                 MouseArea {
                     anchors.fill: parent
-                    onClicked: {
-                        if (sideMenu.state == "open") {
-                            sideMenu.state = "closed"
-                        } else {
-                            sideMenu.state = "open"
-                        }
-                    }
+                    onClicked: { toggleSideMenu.trigger() }
                 }
             }
 
