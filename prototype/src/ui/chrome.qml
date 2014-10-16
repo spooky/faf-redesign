@@ -175,7 +175,7 @@ Window {
             anchors.leftMargin: 5
             anchors.rightMargin: 5
             height: 0.8*parent.height
-            z: 900
+            z: 1100
             state: "closed"
             states: [
                 State {
@@ -204,7 +204,7 @@ Window {
             anchors.left: parent.left
             anchors.top: topArea.bottom
             anchors.bottom: bottomArea.top
-            anchors.leftMargin: 5
+            anchors.leftMargin: borderResizeHook.border.width
             anchors.topMargin: 5
             anchors.bottomMargin: 5
             width: 32+2*5
@@ -231,27 +231,29 @@ Window {
                 anchors.topMargin: 10
                 anchors.bottomMargin: 10
 
+                property size sideMenuIconSize: Qt.size(42, 42)
+
                 Image {
                     source: "icons/rss.svg"
-                    sourceSize: Qt.size(32, 32)
+                    sourceSize: parent.sideMenuIconSize
                     anchors.horizontalCenter: parent.horizontalCenter
                 }
 
                 Image {
                     source: "icons/lightbulb.svg"
-                    sourceSize: Qt.size(32, 32)
+                    sourceSize: parent.sideMenuIconSize
                     anchors.horizontalCenter: parent.horizontalCenter
                 }
 
                 Image {
                     source: "icons/point.svg"
-                    sourceSize: Qt.size(32, 32)
+                    sourceSize: parent.sideMenuIconSize
                     anchors.horizontalCenter: parent.horizontalCenter
                 }
 
                 Image {
                     source: "icons/world.svg"
-                    sourceSize: Qt.size(32, 32)
+                    sourceSize: parent.sideMenuIconSize
                     anchors.horizontalCenter: parent.horizontalCenter
                 }
             }
