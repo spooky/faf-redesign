@@ -1,7 +1,7 @@
+from concurrent.futures import ThreadPoolExecutor 
 from PyQt5.QtCore import QObject, QUrl, pyqtProperty, pyqtSignal
 from PyQt5.QtQml import QQmlApplicationEngine
 from PyQt5.QtGui import QGuiApplication
-from concurrent.futures import ThreadPoolExecutor 
 
 
 class TaskStatus(QObject):
@@ -17,10 +17,10 @@ class TaskStatus(QObject):
     def on_finished(self, result):
         self.parent().clearTaskStatus()
 
-
 class Application(QGuiApplication):
-    # TODO: check if that's a valid way to ensure single instance
-    __taskExecutor = ThreadPoolExecutor(max_workers=1)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.__taskExecutor = ThreadPoolExecutor(max_workers=1)
 
     def getTaskExecutor(self):
         return self.__taskExecutor
@@ -29,6 +29,7 @@ class Application(QGuiApplication):
         self.mainWindow = MainWindow(self)
         self.taskStatus = TaskStatus(self.mainWindow.model)
         self.mainWindow.show()
+
 
 # TODO: use MetaClass model to handle notifyable properties
 class MainWindowViewModel(QObject):
