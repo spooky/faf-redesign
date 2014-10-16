@@ -12,20 +12,23 @@ class Indefinite(QObject):
     progress = pyqtSignal(float)
     indefinite = True
 
-    def _operation(self):
-        return self.operation(*self.args, **self.kwargs)
+    def _progress(self, current, max=1.0):
+        self.progress.emit(current)
 
     def __init__(self, operation, description, args, kwargs):
         super().__init__()
         self.operation = operation
+        self.description = description
         self.args = args
         self.kwargs = kwargs
-        self.description = description
+
+        # inject "progress" function into operation's scope
+        self.operation.__globals__['progress'] = self._progress
 
     def __call__(self):
         self.started.emit()
         try:
-            result = self._operation()
+            result = self.operation(*self.args, **self.kwargs)
         except Exception as ex:
             result = ex
         self.finished.emit(result)
@@ -34,19 +37,14 @@ class Indefinite(QObject):
 class Progressive(Indefinite):
     indefinite = False
 
-    def _operation(self):
-        self.kwargs["progress"] = lambda x: self.progress.emit(x)
-        return self.operation(*self.args, **self.kwargs)
-
 
 def task(klass, started=None, finished=None, progress=None):
-    """
+    '''
         Decorate a function to run in background
-    """
+    '''
     def decorate(operation):
         def wrapper(*args, **kwargs):
-            print(getattr(operation, "description", None))
-            description = getattr(wrapper, "description", str(operation))
+            description = getattr(wrapper, 'description', str(operation))
             task = klass(operation, description, args, kwargs)
 
             if started:
@@ -66,10 +64,10 @@ def task(klass, started=None, finished=None, progress=None):
 
 
 def uitask(klass, started=None, finished=None, progress=None):
-    """
+    '''
         Decorate a function to run in background and report status to
         the main window
-    """
+    '''
     def on_started(*args, **kwargs):
         status = Application.instance().taskStatus
         status.on_started(*args, **kwargs)
@@ -93,3 +91,9 @@ def uitask(klass, started=None, finished=None, progress=None):
                 finished=on_finished,
                 progress=on_progress)
 
+
+def progress(*args, **kwargs):
+    '''
+        Stub to silence symbol warnings in task-decorated functions
+    '''
+    pass
