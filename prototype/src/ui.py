@@ -1,7 +1,22 @@
-from PyQt5.QtCore import QObject, QUrl, pyqtProperty, pyqtSignal, QThread
+from PyQt5.QtCore import QObject, QUrl, pyqtProperty, pyqtSignal
 from PyQt5.QtQml import QQmlApplicationEngine
 from PyQt5.QtGui import QGuiApplication
 from concurrent.futures import ThreadPoolExecutor 
+
+
+class TaskStatus(QObject):
+    def __init__(self, parent):
+        super().__init__(parent)
+
+    def on_started(self):
+        self.parent.setTaskStatus(self.sender().description, self.sender().indefinite)
+
+    def on_progress(self, x):
+        self.parent.taskStatusProgress = x
+
+    def on_finished(self):
+        self.parent.clearTaskStatus()
+
 
 class Application(QGuiApplication):
     # TODO: check if that's a valid way to ensure single instance
@@ -12,7 +27,9 @@ class Application(QGuiApplication):
 
     def start(self):
         self.mainWindow = MainWindow(self)
+        self.taskStatus = TaskStatus(self.mainWindow)
         self.mainWindow.show()
+
 
 class MainWindowViewModel(QObject):
     def __init__(self, parent=None):
@@ -84,6 +101,7 @@ class MainWindowViewModel(QObject):
         self.taskStatusIsIndefinite = True
         self.taskStatusText = None
         self.taskStatusProgress = 0.0
+
 
 class MainWindow(QObject):
     def __init__(self, parent=None):
