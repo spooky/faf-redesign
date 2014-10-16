@@ -29,13 +29,14 @@ class ProgressiveTask(IndefiniteTask):
     def _execute_operation(self):
         return self.operation(self.progress)
 
-def submitIndefinite(text, **kwargs):
+def submitIndefinite(text, finished=None):
     '''
         Decorator for functions that should be run as an IndefiniteTask
     '''
     def wire(worker):
         task = IndefiniteTask(worker)
-        task.finished.connect(kwargs['finished'])
+        if finished:
+            task.finished.connect(finished)
 
         def submit():
             app = Application.instance()
@@ -47,13 +48,14 @@ def submitIndefinite(text, **kwargs):
         return submit
     return wire
 
-def submitProgressive(text, **kwargs):
+def submitProgressive(text, finished=None):
     '''
         Decorator for functions that should be run as a ProgressiveTask
     '''
     def wire(worker):
         task = ProgressiveTask(worker)
-        task.finished.connect(kwargs['finished'])
+        if finished:
+            task.finished.connect(finished)
 
         def submit():
             app = Application.instance()
