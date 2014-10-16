@@ -44,7 +44,7 @@ def task(klass, started=None, finished=None, progress=None):
     '''
     def decorate(operation):
         def wrapper(*args, **kwargs):
-            description = getattr(wrapper, 'description', str(operation))
+            description = getattr(wrapper, 'description', operation.__name__)
             task = klass(operation, description, args, kwargs)
 
             if started:
@@ -57,9 +57,7 @@ def task(klass, started=None, finished=None, progress=None):
                 task.progress.connect(progress)
 
             return Application.instance().getTaskExecutor().submit(task)
-
         return wrapper
-
     return decorate
 
 

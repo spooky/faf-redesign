@@ -10,7 +10,7 @@ def callback(result):
 def long_operation():
     time.sleep(3)
     return 'a'
-long_operation.description = 'Indefinite'
+long_operation.description = 'running without reporting progress'
 
 
 @uitask(Progressive, finished=callback)
@@ -18,10 +18,10 @@ def long_operation_with_progress():
     count = 0
     while count < 10:
         time.sleep(0.3)
-        progress((count+1)/10)
+        progress((count+1) / 20)
         count += 1
     return 'b'
-long_operation_with_progress.description = 'Progressive'
+long_operation_with_progress.description = 'running and reporting progress'
 
 
 @uitask(Progressive, finished=callback)
@@ -32,21 +32,24 @@ def long_operation_with_arguments(p1):
         progress((count+1)/10)
         count += 1
     return 'b'
-long_operation_with_arguments.description = 'Progressive2'
+long_operation_with_arguments.description = 'running with an argument and reporting progress'
 
 
 class Downloader:
     def __init__(self, url):
         self.url = url
 
+    # def callback(self, result):
+    #     print('downloader callback result: {}'.format(result))
+
     @uitask(Progressive)
-    def run(self, progress):
+    def run(self):
         for i in range(0,10):
             time.sleep(0.3)
             progress((i+1)/10)
 
         return self.url
-    run.description = 'Downloading' # property(str, lambda self: 'Downloading {}'.format(self.url))
+    run.description = 'downloading with run' # property(str, lambda self: 'downloading {}'.format(self.url))
 
     @uitask(Progressive)
     def run2(self, p1):
@@ -55,14 +58,21 @@ class Downloader:
             progress((i+1), 10)
 
         return self.url
-    run2.description = 'Downloading2' # property(str, lambda self: 'Downloading {}'.format(self.url))
+    run2.description = 'downloading with run2' # property(str, lambda self: 'downloading {}'.format(self.url))
+
+    @uitask(Indefinite)
+    def run3(self):
+        time.sleep(1)
+        return self.url
+    run3.description = 'running with run3' # property(str, lambda self: 'downloading {}'.format(self.url))
 
 
 def run_background_task_samples():
-    long_operation()
+    # long_operation()
     long_operation_with_progress()
-    long_operation_with_arguments("bar")
+    # long_operation_with_arguments('bar')
 
-    downloader = Downloader("http://kernel.org")
-    downloader.run()
-    downloader.run2("foo")
+    # downloader = Downloader('http://kernel.org')
+    # downloader.run()
+    # downloader.run2('foo')
+    # downloader.run3()

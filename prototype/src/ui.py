@@ -11,8 +11,8 @@ class TaskStatus(QObject):
     def on_started(self):
         self.parent().setTaskStatus(self.sender().description, self.sender().indefinite)
 
-    def on_progress(self, x):
-        self.parent().taskStatusProgress = x
+    def on_progress(self, p):
+        self.parent().taskStatusProgress = p
 
     def on_finished(self, result):
         self.parent().clearTaskStatus()
