@@ -58,19 +58,20 @@ def uitask(klass, started=None, finished=None, progress=None):
         Decorate a function to run in background and report status to
         the main window
     """
-    status = Application.instance().taskStatus
-
     def on_started(*args, **kwargs):
+        status = Application.instance().taskStatus
         status.on_started(*args, **kwargs)
         if started:
             started()
 
     def on_finished(*args, **kwargs):
+        status = Application.instance().taskStatus
         status.on_finished(*args, **kwargs)
         if finished:
             finished()
 
     def on_progress(*args, **kwargs):
+        status = Application.instance().taskStatus
         status.on_progress(*args, **kwargs)
         if progress:
             progress()
