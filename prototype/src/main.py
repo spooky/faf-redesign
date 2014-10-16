@@ -30,14 +30,14 @@ class Downloader:
 
     @uitask(Progressive)
     def run(self, progress):
-        print "Starting download of {}".format(self.url)
+        print("Starting download of {}".format(self.url))
 
         import time
         for i in range(0,10):
             time.sleep(0.3)
             progress((i+1)/10)
 
-        print "Finished download of {}".format(self.url)
+        print("Finished download of {}".format(self.url))
 
         return self.url
 
