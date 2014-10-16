@@ -18,7 +18,7 @@ def long_operation_with_progress():
     count = 0
     while count < 10:
         time.sleep(0.3)
-        progress((count+1) / 20)
+        progress((count+1), 10)
         count += 1
     return 'b'
 long_operation_with_progress.description = 'running and reporting progress'
@@ -29,7 +29,7 @@ def long_operation_with_arguments(p1):
     count = 0
     while count < 10:
         time.sleep(0.3)
-        progress((count+1)/10)
+        progress((count+1), 10)
         count += 1
     return 'b'
 long_operation_with_arguments.description = 'running with an argument and reporting progress'

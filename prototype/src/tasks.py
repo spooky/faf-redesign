@@ -1,8 +1,6 @@
 from PyQt5.QtCore import QObject, pyqtSignal
 from ui import Application
 
-# TODO: progress(0.3) albo progress(3, 10) -> progress(current, max=1.0):
-# TODO: progress in function globals -> wrap.func_globals['progress'] = progress
 class Indefinite(QObject):
     '''
         Run task without blocking the UI
@@ -13,7 +11,7 @@ class Indefinite(QObject):
     indefinite = True
 
     def _progress(self, current, max=1.0):
-        self.progress.emit(current)
+        self.progress.emit(current / max)
 
     def __init__(self, operation, description, args, kwargs):
         super().__init__()
