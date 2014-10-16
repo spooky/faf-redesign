@@ -61,6 +61,17 @@ Window {
                 anchors.top: parent.top
                 anchors.topMargin: 5
                 anchors.leftMargin: 2*5
+
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        if (sideMenu.state == "open") {
+                            sideMenu.state = "closed"
+                        } else {
+                            sideMenu.state = "open"
+                        }
+                    }
+                }
             }
 
             Item {
@@ -80,8 +91,8 @@ Window {
 
                         Image {
                             source: "icons/minimize.svg"
-                            width: 10
-                            height: 10
+                            sourceSize.width: 10
+                            sourceSize.height: 10
                             anchors.horizontalCenter: parent.horizontalCenter
                             anchors.verticalCenter: parent.verticalCenter
                         }
@@ -101,8 +112,8 @@ Window {
 
                         Image {
                             source: root.visibility == Window.Maximized ? "icons/restore.svg" : "icons/maximize.svg"
-                            width: 10
-                            height: 10
+                            sourceSize.width: 10
+                            sourceSize.height: 10
                             anchors.horizontalCenter: parent.horizontalCenter
                             anchors.verticalCenter: parent.verticalCenter
                         }
@@ -122,8 +133,8 @@ Window {
 
                         Image {
                             source: "icons/close.svg"
-                            width: 10
-                            height: 10
+                            sourceSize.width: 10
+                            sourceSize.height: 10
                             anchors.horizontalCenter: parent.horizontalCenter
                             anchors.verticalCenter: parent.verticalCenter
                         }
@@ -135,6 +146,68 @@ Window {
                             onClicked: closeWindow.trigger(closeMouseArea)
                         }
                     }
+                }
+            }
+        }
+
+        Rectangle {
+            id: sideMenu
+            anchors.left: parent.left
+            anchors.top: topArea.bottom
+            anchors.bottom: bottomArea.top
+            anchors.leftMargin: 5
+            anchors.topMargin: 5
+            anchors.bottomMargin: 5
+            width: 32+2*5
+            z: 1000
+            color: root.color
+            state: "closed"
+
+            states: [
+                State {
+                    name: "open"
+                    PropertyChanges { target: sideMenu; visible: true }
+                },
+                State {
+                    name: "closed"
+                    PropertyChanges { target: sideMenu; visible: false }
+                }
+            ]
+
+            Column {
+                spacing: 10
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+                anchors.topMargin: 10
+                anchors.bottomMargin: 10
+
+                Image {
+                    source: "icons/rss.svg"
+                    sourceSize.width: 32
+                    sourceSize.height: 32
+                    anchors.horizontalCenter: parent.horizontalCenter
+                }
+
+                Image {
+                    source: "icons/lightbulb.svg"
+                    sourceSize.width: 32
+                    sourceSize.height: 32
+                    anchors.horizontalCenter: parent.horizontalCenter
+                }
+
+                Image {
+                    source: "icons/point.svg"
+                    sourceSize.width: 32
+                    sourceSize.height: 32
+                    anchors.horizontalCenter: parent.horizontalCenter
+                }
+
+                Image {
+                    source: "icons/world.svg"
+                    sourceSize.width: 32
+                    sourceSize.height: 32
+                    anchors.horizontalCenter: parent.horizontalCenter
                 }
             }
         }
@@ -214,8 +287,8 @@ Window {
                 anchors.bottom: parent.bottom
                 anchors.rightMargin: 5
                 source: "icons/corner.svg"
-                height: label.height
-                width: label.height
+                sourceSize.width: label.height
+                sourceSize.height: label.height
 
                 MouseArea {
                     anchors.fill: parent

@@ -3,7 +3,7 @@ from PyQt5.QtCore import QObject, QUrl, pyqtProperty, pyqtSignal
 from PyQt5.QtQml import QQmlApplicationEngine
 from PyQt5.QtGui import QGuiApplication
 
-
+# TODO: move this class away from ui module 
 class TaskStatus(QObject):
     def __init__(self, parent):
         super().__init__(parent)
