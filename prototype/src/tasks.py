@@ -45,6 +45,7 @@ def task(klass, started=None, finished=None, progress=None):
     """
     def decorate(operation):
         def wrapper(*args, **kwargs):
+            print(getattr(operation, "description", None))
             description = getattr(wrapper, "description", str(operation))
             task = klass(operation, description, args, kwargs)
 
