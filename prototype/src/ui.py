@@ -30,7 +30,7 @@ class Application(QGuiApplication):
         self.taskStatus = TaskStatus(self.mainWindow)
         self.mainWindow.show()
 
-
+# TODO: use MetaClass model to handle notifyable properties
 class MainWindowViewModel(QObject):
     def __init__(self, parent=None):
         super().__init__(parent)
