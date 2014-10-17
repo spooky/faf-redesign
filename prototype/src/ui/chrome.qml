@@ -52,7 +52,7 @@ Window {
         border.width: root.visibility == Window.Maximized ? 0 : 1
         border.color: root.highlightColor
         color: "transparent"
-        z: 250
+        z: 300
     }
 
     Rectangle {
@@ -65,7 +65,7 @@ Window {
         anchors.leftMargin: borderResizeHook.border.width
         height: childrenRect.height
         color: root.color
-        z: 300
+        z: 400
 
         Item {
             anchors.top: parent.top
@@ -302,7 +302,7 @@ Window {
         anchors.right: parent.right
         anchors.bottomMargin: 5
         height: 13 // childrenRect.height // this reports binding loop for some reason
-        z: 300
+        z: 400
 
         Label {
             id: label
