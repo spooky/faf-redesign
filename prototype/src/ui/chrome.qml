@@ -204,8 +204,7 @@ Window {
                 PropertyChanges { target: debugWindowOffset; y: -debugWindow.height }
             }
         ]
-        transitions:
-            Transition { NumberAnimation { target: debugWindowOffset; property: "y"; duration: 200 } }
+        transitions: Transition { NumberAnimation { target: debugWindowOffset; property: "y"; duration: 200 } }
 
         TextArea {
             anchors.fill: parent
@@ -227,19 +226,23 @@ Window {
         anchors.bottomMargin: 5
         width: 32+2*5
         z: 100
+        transform: Translate {
+            id: sideMenuOffset
+            x: -sideMenu.width
+        }
         color: root.color
         state: "closed"
-
         states: [
             State {
                 name: "open"
-                PropertyChanges { target: sideMenu; visible: true }
+                PropertyChanges { target: sideMenuOffset; x: 0 }
             },
             State {
                 name: "closed"
-                PropertyChanges { target: sideMenu; visible: false }
+                PropertyChanges { target: sideMenuOffset; x: -sideMenu.width }
             }
         ]
+        transitions: Transition { NumberAnimation { target: sideMenuOffset; property: "x"; duration: 200 } }
 
         Column {
             spacing: 10
