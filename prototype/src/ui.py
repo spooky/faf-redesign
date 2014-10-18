@@ -113,7 +113,7 @@ class MainWindow(QObject):
         self.engine = QQmlApplicationEngine(self)
         self.engine.rootContext().setContextProperty('model', self.model)
         self.engine.quit.connect(parent.quit)
-        self.engine.load(QUrl.fromLocalFile('ui/chrome.qml'))
+        self.engine.load(QUrl.fromLocalFile('ui/Chrome.qml'))
 
         self.window = self.engine.rootObjects()[0]
 

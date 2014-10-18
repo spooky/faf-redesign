@@ -67,27 +67,35 @@ Window {
         color: root.color
         z: 400
 
-        Item {
+        ActionIcon {
+            id: actionIcon
+            source: "icons/faf.png"
+            overlayColor: "transparent"
+            glowColor: "white"
+            glowRadius: 3
+            size: 30
+            smooth: true
             anchors.top: parent.top
             anchors.left: parent.left
+            anchors.topMargin: 2
+            anchors.leftMargin: 5 + borderResizeHook.border.width
+            onClicked: { toggleSideMenu.trigger() }
+        }
+
+        Item { // to hold main menu, top action menu, user widget...
+            anchors.top: parent.top
+            anchors.left: actionIcon.right
             anchors.right: parent.right
             anchors.margins: 5
             height: childrenRect.height + 5
             z:400
 
-            Image {
-                id: actionIcon
-                source: "icons/faf.png"
-                sourceSize: Qt.size(24, 24)
-                smooth: true
-                anchors.left: parent.left
+            Row {
                 anchors.top: parent.top
-                anchors.leftMargin: 5
+                anchors.left: parent.left
 
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: { toggleSideMenu.trigger() }
-                }
+                width: 24
+                height: 24
             }
         }
 
@@ -163,7 +171,7 @@ Window {
             anchors.top: parent.top
             anchors.right: windowControls.left
             anchors.bottom: parent.bottom
-            anchors.left: parent.left
+            anchors.left: actionIcon.right
 
             onDoubleClicked: root.visibility == Window.Maximized ? root.showNormal() : root.showMaximized()
 
@@ -252,29 +260,23 @@ Window {
             anchors.topMargin: 10
             anchors.bottomMargin: 10
 
-            property size sideMenuIconSize: Qt.size(42, 42)
-
-            Image {
+            ActionIcon {
                 source: "icons/rss.svg"
-                sourceSize: parent.sideMenuIconSize
                 anchors.horizontalCenter: parent.horizontalCenter
             }
 
-            Image {
+            ActionIcon {
                 source: "icons/lightbulb.svg"
-                sourceSize: parent.sideMenuIconSize
                 anchors.horizontalCenter: parent.horizontalCenter
             }
 
-            Image {
+            ActionIcon {
                 source: "icons/point.svg"
-                sourceSize: parent.sideMenuIconSize
                 anchors.horizontalCenter: parent.horizontalCenter
             }
 
-            Image {
+            ActionIcon {
                 source: "icons/world.svg"
-                sourceSize: parent.sideMenuIconSize
                 anchors.horizontalCenter: parent.horizontalCenter
             }
         }
@@ -295,6 +297,12 @@ Window {
             id: centralWidget
             color: "#202025"
             anchors.fill: parent
+
+            ActionIcon {
+                anchors.centerIn: parent
+                source: "icons/lightbulb.svg"
+                size: 256
+            }
         }
     }
 
