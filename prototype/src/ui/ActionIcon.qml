@@ -16,7 +16,7 @@ Item {
     width: size
     height: size
 
-    Image{
+    Image {
         id: icon
         anchors.centerIn: parent
         anchors.verticalCenter: parent.verticalCenter
@@ -26,18 +26,19 @@ Item {
         z: 20
     }
 
-    Glow {
-        cached: true
-        anchors.fill: wrapper
-        radius: wrapper.glowRadius
-        samples: 32
-        color: wrapper.glowColor
-        source: wrapper
-        z: 10
-        opacity: mouseArea.containsMouse ? 1 : 0
+    // need opengl lib for this to work...
+    // Glow {
+    //     cached: true
+    //     anchors.fill: wrapper
+    //     radius: wrapper.glowRadius
+    //     samples: 32
+    //     color: wrapper.glowColor
+    //     source: wrapper
+    //     z: 10
+    //     opacity: mouseArea.containsMouse ? 1 : 0
 
-        Behavior on opacity { NumberAnimation { duration: wrapper.fadeSpeed; } }
-    }
+    //     Behavior on opacity { NumberAnimation { duration: wrapper.fadeSpeed; } }
+    // }
 
     ColorOverlay {
         cached: true

@@ -70,7 +70,7 @@ Window {
         ActionIcon {
             id: actionIcon
             source: "icons/faf.png"
-            overlayColor: "transparent"
+            overlayColor: "#44f1c240"
             glowColor: "white"
             glowRadius: 3
             size: 30
