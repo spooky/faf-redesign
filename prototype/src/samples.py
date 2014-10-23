@@ -1,9 +1,11 @@
 import time
+import logging
 from tasks import uitask, Indefinite, Progressive, progress
 
 
 def callback(result):
-    print('callback result: {}'.format(result))
+    logger = logging.getLogger(__name__)
+    logger.debug('callback result: {}'.format(result))
 
 
 @uitask(Indefinite, finished=callback)
@@ -40,7 +42,8 @@ class Downloader:
         self.url = url
 
     # def callback(self, result):
-    #     print('downloader callback result: {}'.format(result))
+    #     logger = logging.getLogger(__name__)
+    #     logger.debug('downloader callback result: {}'.format(result))
 
     @uitask(Progressive)
     def run(self):

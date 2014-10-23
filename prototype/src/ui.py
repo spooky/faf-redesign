@@ -1,7 +1,11 @@
+import logging
 from concurrent.futures import ThreadPoolExecutor 
-from PyQt5.QtCore import QObject, QUrl, pyqtProperty, pyqtSignal
+from PyQt5.QtCore import QObject, QUrl, pyqtProperty, pyqtSignal, QMetaObject, Q_ARG
 from PyQt5.QtQml import QQmlApplicationEngine
 from PyQt5.QtGui import QGuiApplication
+from PyQt5.QtQuick import QQuickItem
+
+LOG_BUFFER_SIZE = 1000
 
 # TODO: move this class away from ui module 
 class TaskStatus(QObject):
@@ -17,7 +21,10 @@ class TaskStatus(QObject):
     def on_finished(self, result):
         self.parent().clearTaskStatus()
 
+
 class Application(QGuiApplication):
+    log_changed = pyqtSignal(str)
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.__taskExecutor = ThreadPoolExecutor(max_workers=1)
@@ -29,6 +36,9 @@ class Application(QGuiApplication):
         self.mainWindow = MainWindow(self)
         self.taskStatus = TaskStatus(self.mainWindow.model)
         self.mainWindow.show()
+
+    def log(self, msg):
+        self.log_changed.emit(msg)
 
 
 # TODO: use MetaClass model to handle notifyable properties
@@ -117,5 +127,17 @@ class MainWindow(QObject):
 
         self.window = self.engine.rootObjects()[0]
 
+        # wire up logging console
+        self.log =self.window.findChild(QQuickItem, 'log')
+        parent.log_changed.connect(self._log)
+
     def show(self):
         self.window.show()
+
+    def _log(self, msg):
+        # replace with collections.deque binding(ish)?
+        if self.log.property('lineCount') == LOG_BUFFER_SIZE:
+            line_end = self.log.property('text').find('\n') + 1
+            self.log.remove(0, line_end)
+
+        self.log.append(msg);

@@ -1,8 +1,20 @@
 import sys
+import json
+import logging, logging.config
 from ui import Application
+
+
+def configureLogging():
+    with open('logging.json') as config:
+        logging.config.dictConfig(json.load(config))
 
 if __name__ == '__main__':
     app = Application(sys.argv)
+
+    configureLogging()
+    logger = logging.getLogger(__name__)
+    logger.info('starting app')
+
     app.start()
 
     from samples import run_background_task_samples

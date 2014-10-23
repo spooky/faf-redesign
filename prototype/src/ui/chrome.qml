@@ -215,13 +215,15 @@ Window {
         transitions: Transition { NumberAnimation { target: debugWindowOffset; property: "y"; duration: 200 } }
 
         TextArea {
+            objectName: 'log'
             anchors.fill: parent
             frameVisible: false
-            text: "text area for debug info. \r\npossibly qscintilla"
+            readOnly: true
             style: TextAreaStyle {
                 textColor: "#969696"
                 backgroundColor: root.highlightColor
             }
+
         }
     }
 
