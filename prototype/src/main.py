@@ -12,8 +12,8 @@ if __name__ == '__main__':
     app = Application(sys.argv)
 
     configureLogging()
-    logger = logging.getLogger(__name__)
-    logger.info('starting app')
+    log = logging.getLogger(__name__)
+    log.info('starting app')
 
     app.start()
 
