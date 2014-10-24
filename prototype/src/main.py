@@ -5,8 +5,13 @@ from ui import Application
 
 
 def configureLogging():
-    with open('logging.json') as config:
-        logging.config.dictConfig(json.load(config))
+    try:
+        with open('logging.json') as config:
+            logging.config.dictConfig(json.load(config))
+    except:
+        import utils
+        h = utils.QtHandler()
+        logging.basicConfig(level=logging.WARNING, handlers=[h])
 
 if __name__ == '__main__':
     app = Application(sys.argv)
