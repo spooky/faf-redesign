@@ -10,8 +10,7 @@ def configureLogging():
             logging.config.dictConfig(json.load(config))
     except:
         import utils
-        h = utils.QtHandler()
-        logging.basicConfig(level=logging.WARNING, handlers=[h])
+        logging.basicConfig(level=logging.WARNING, handlers=[utils.QtHandler()])
 
 if __name__ == '__main__':
     app = Application(sys.argv)
