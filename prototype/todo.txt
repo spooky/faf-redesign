@@ -5,3 +5,5 @@
 * main menu
 * action menu
 * setup tools
+* minimize svg files
+* use stylesheet for whole app (if possible)
