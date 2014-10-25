@@ -12,9 +12,12 @@ Window {
     minimumWidth: 400
     minimumHeight: 300
     flags: Qt.Window | Qt.FramelessWindowHint | Qt.WindowSystemMenuHint | Qt.WindowMinimizeButtonHint | Qt.WindowMaximizeButtonHint
-    color: "#111111"
+    color: backgroundColor
 
-    property string highlightColor: "#2f2f2f" //"#454545"
+    property string backgroundColor: "#111111"
+    property string highlightColor: "#2f2f2f"
+    property string altHighlightColor: "#454545"
+    property string textColor: "#969696"
 
     Action {
         id: closeWindow
@@ -74,7 +77,6 @@ Window {
             glowColor: "white"
             glowRadius: 3
             size: 30
-            smooth: true
             anchors.top: parent.top
             anchors.left: parent.left
             anchors.topMargin: 2
@@ -97,6 +99,18 @@ Window {
                 width: 24
                 height: 24
             }
+        }
+
+        User {
+                id: user
+                anchors.top: parent.top
+                anchors.right: windowControls.left
+                background: root.highlightColor
+                onClicked: {
+                    var f = logIn.visible;
+                    logIn.visible = !f
+                    state = f ? "closed" : "open"
+                }
         }
 
         Row {
@@ -128,7 +142,7 @@ Window {
                 Rectangle {
                     width: 26
                     height: 26
-                    color: maximizeMouseArea.containsMouse ? "#454545" : "transparent"
+                    color: maximizeMouseArea.containsMouse ? root.altHighlightColor : "transparent"
 
                     Image {
                         source: root.visibility == Window.Maximized ? "icons/restore.svg" : "icons/maximize.svg"
@@ -148,7 +162,7 @@ Window {
                 Rectangle {
                     width: 32
                     height: 26
-                    color: closeMouseArea.containsMouse ? "#454545" : "transparent"
+                    color: closeMouseArea.containsMouse ? root.altHighlightColor : "transparent"
 
                     Image {
                         source: "icons/close.svg"
@@ -169,7 +183,7 @@ Window {
         MouseArea {
             id: topAreaMouseHandle
             anchors.top: parent.top
-            anchors.right: windowControls.left
+            anchors.right: user.left
             anchors.bottom: parent.bottom
             anchors.left: actionIcon.right
 
@@ -186,6 +200,16 @@ Window {
                 }
             }
         }
+    }
+
+    LogIn {
+        id: logIn
+        visible: false
+        background: root.highlightColor
+        textColor: root.textColor
+        x: root.width - windowControls.width - windowControls.anchors.rightMargin - user.anchors.rightMargin - width - border.width // absolute positioning to user control"s right
+        y: topArea.height + border.width
+        z: 500
     }
 
     Item {
@@ -215,12 +239,12 @@ Window {
         transitions: Transition { NumberAnimation { target: debugWindowOffset; property: "y"; duration: 200 } }
 
         TextArea {
-            objectName: 'log'
+            objectName: "log"
             anchors.fill: parent
             frameVisible: false
             readOnly: true
             style: TextAreaStyle {
-                textColor: "#969696"
+                textColor: root.textColor
                 backgroundColor: root.highlightColor
             }
 
@@ -300,11 +324,11 @@ Window {
             color: "#202025"
             anchors.fill: parent
 
-            ActionIcon {
-                anchors.centerIn: parent
-                source: "icons/lightbulb.svg"
-                size: 256
-            }
+            // ActionIcon {
+            //     anchors.centerIn: parent
+            //     source: "icons/lightbulb.svg"
+            //     size: 256
+            // }
         }
     }
 
@@ -320,7 +344,7 @@ Window {
         Label {
             id: label
             text: model.label
-            color: "#454545"
+            color: root.altHighlightColor
             anchors.left: parent.left
             anchors.bottom: parent.bottom
             anchors.leftMargin: 2*5
@@ -338,7 +362,7 @@ Window {
             Label {
                 id: actionLabel
                 text: model.taskStatusText
-                color: "#969696"
+                color: root.textColor
             }
 
             ProgressBar {
@@ -350,14 +374,14 @@ Window {
                 style: ProgressBarStyle {
                     background: Rectangle {
                         color: "transparent"
-                        border.color: "#969696"
+                        border.color: root.textColor
                         border.width: 1
                         implicitWidth: 200
                         implicitHeight: 24
                     }
                     progress: Rectangle {
-                        color: "#969696"
-                        border.color: "#969696"
+                        color: root.textColor
+                        border.color: root.textColor
                     }
                 }
             }
