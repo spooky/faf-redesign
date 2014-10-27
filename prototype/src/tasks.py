@@ -1,7 +1,9 @@
 from PyQt5.QtCore import QObject, pyqtSignal
-from ui import Application
+from widgets import Application
+
 
 class Indefinite(QObject):
+
     '''
         Run task without blocking the UI
     '''
@@ -86,6 +88,7 @@ def uitask(klass, started=None, finished=None, progress=None):
                 started=on_started,
                 finished=on_finished,
                 progress=on_progress)
+
 
 def progress(*args, **kwargs):
     '''

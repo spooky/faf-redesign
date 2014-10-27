@@ -1,7 +1,8 @@
 import sys
 import json
-import logging, logging.config
-from ui import Application
+import logging
+import logging.config
+from widgets import Application
 
 
 def configureLogging():
@@ -21,7 +22,7 @@ if __name__ == '__main__':
 
     app.start()
 
-    from samples import run_background_task_samples
-    run_background_task_samples()
+    # from samples import run_background_task_samples
+    # run_background_task_samples()
 
     sys.exit(app.exec_())

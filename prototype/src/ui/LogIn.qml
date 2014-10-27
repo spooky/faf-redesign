@@ -6,6 +6,9 @@ Rectangle {
     property string textColor
     property int padding: 5
 
+    signal clicked
+
+    id: wrapper
     color: background
     width: childrenRect.width + 2*padding
     height: childrenRect.height + 2*padding
@@ -18,21 +21,21 @@ Rectangle {
 
         Text {
             text: "User Name"
-            // font.capitalization: Font.SmallCaps
             color: textColor
         }
 
         TextField {
+            id: userName
             width: parent.width
         }
 
         Text {
             text: "Password"
-            // font.capitalization: Font.SmallCaps
             color: textColor
         }
 
         TextField {
+            id: password
             echoMode: TextInput.Password
             width: parent.width
         }
@@ -40,6 +43,7 @@ Rectangle {
         Button {
             text: "Log In"
             anchors.right: parent.right
+            onClicked: loginModel.login(userName.text, password.text) // is that how you do it?
         }
     }
 }

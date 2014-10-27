@@ -247,7 +247,6 @@ Window {
                 textColor: root.textColor
                 backgroundColor: root.highlightColor
             }
-
         }
     }
 
