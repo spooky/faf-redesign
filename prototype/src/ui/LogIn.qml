@@ -14,26 +14,31 @@ Rectangle {
         spacing: padding
         x: padding
         y: padding
+        width: 150
 
         Text {
-            text: "user name"
+            text: "User Name"
+            // font.capitalization: Font.SmallCaps
             color: textColor
         }
 
         TextField {
+            width: parent.width
         }
 
         Text {
-            text: "password"
+            text: "Password"
+            // font.capitalization: Font.SmallCaps
             color: textColor
         }
 
         TextField {
             echoMode: TextInput.Password
+            width: parent.width
         }
 
         Button {
-            text: "log in"
+            text: "Log In"
             anchors.right: parent.right
         }
     }
