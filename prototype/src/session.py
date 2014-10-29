@@ -1,31 +1,45 @@
 import logging
-# from PyQt5.QtCore import QDataStream
-from PyQt5.QtNetwork import QTcpSocket
+from PyQt5.QtCore import QObject
+from PyQt5.QtNetwork import QTcpSocket, QHostAddress
 
-# LOBBY_HOST = 'lobby.faforever.com'
-# LOBBY_PORT = 8001
-LOBBY_HOST = '127.0.0.1'
-LOBBY_PORT = 1234
+# HOST = 'lobby.faforever.com'
+# PORT = 8001
+HOST = '127.0.0.1'
+PORT = 12345
 
 
-class Connection(object):
+class Client(QObject):
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, parent=None):
+        super().__init__(parent)
         self.log = logging.getLogger(__name__)
         self._socket_setup()
 
     def _socket_setup(self):
-        self.socket = QTcpSocket()
+        self.socket = QTcpSocket(self)
         self.socket.setSocketOption(QTcpSocket.KeepAliveOption, 1)
 
-        self.socket.readyRead.connect(self.on_connected)
+        self.socket.readyRead.connect(self.on_data)
+        self.socket.connected.connect(self.on_connected)
         self.socket.disconnected.connect(self.on_disconnected)
         self.socket.error.connect(self.on_error)
         self.socket.stateChanged.connect(self.on_stateChanged)
 
-    def connect(self):
-        self.log.info('connecting...')
-        self.socket.connectToHost(LOBBY_HOST, LOBBY_PORT)
+    def connect(self, host=HOST, port=PORT):
+        if not self.socket.isOpen():
+            self.log.info('connecting to {}:{}'.format(host, port))
+            self.socket.connectToHost(QHostAddress(host), port)
+
+    def disconnect(self):
+        self.log.info('disconnecting')
+        self.socket.disconnectFromHost()
+
+    def on_data(self):
+        data = bytes()
+        while self.socket.bytesAvailable():
+            data += self.socket.read(1024)
+
+        self.log.debug(data)
 
     def on_connected(self):
         self.log.info('connected')

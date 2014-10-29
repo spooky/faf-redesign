@@ -1,8 +1,8 @@
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal
 import session
 
-# TODO: use MetaClass model to handle notifyable properties
-class MainWindowViewModel(QObject):
+
+class MainWindowViewModel(QObject):  # TODO: use MetaClass(ish) model to handle notifyable properties?
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -12,9 +12,7 @@ class MainWindowViewModel(QObject):
         self._taskRunning = False  # wether to show the task indicator
         self._taskStatusText = None  # text to show while task is running
         self._taskStatusIsIndefinite = True  # wether to hide the progress bar
-        # progress bar progress value - makes sense only if
-        # taskStatusIsIndefinite == True
-        self._taskStatusProgress = 0
+        self._taskStatusProgress = 0  # progress bar progress value - makes sense only if taskStatusIsIndefinite == True
 
     @pyqtProperty(str, constant=True)
     def label(self):
@@ -87,7 +85,7 @@ class LoginViewModel(QObject):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.login.connect(self.on_login)
+        self.s = session.Client(self)
 
     def on_login(self, username, password):
-        s = session.Connection()
-        s.connect()
+        self.s.connect()
