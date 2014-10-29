@@ -1,5 +1,5 @@
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal
-
+import session
 
 # TODO: use MetaClass model to handle notifyable properties
 class MainWindowViewModel(QObject):
@@ -89,4 +89,5 @@ class LoginViewModel(QObject):
         self.login.connect(self.on_login)
 
     def on_login(self, username, password):
-        pass
+        s = session.Connection()
+        s.connect()

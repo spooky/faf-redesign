@@ -19,7 +19,6 @@ Item {
     Image {
         id: icon
         anchors.centerIn: parent
-        anchors.verticalCenter: parent.verticalCenter
         source: wrapper.source
         sourceSize: Qt.size(wrapper.size - 2*glowRadius, wrapper.size - 2*glowRadius)
         smooth: true

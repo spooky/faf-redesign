@@ -13,7 +13,7 @@ Rectangle {
         },
         State {
             name: "closed"
-            PropertyChanges { target: wrapper; color: "transparent" }
+            PropertyChanges { target: wrapper; color: mouseArea.containsMouse ? "#454545" : "transparent" }
         }
     ]
 
@@ -30,14 +30,27 @@ Rectangle {
             color: "#969696"
         }
 
-        ActionIcon {
-            source: "icons/user.svg"
-            size: 30
+        Item {
+            width: 30
+            height: 30
             anchors.verticalCenter: parent.verticalCenter
+
+            Image {
+                source: "icons/user.svg"
+                sourceSize: Qt.size(24, 24)
+                anchors.centerIn: parent
+            }
         }
+        // ActionIcon {
+        //     source: "icons/user.svg"
+        //     size: 30
+        //     anchors.verticalCenter: parent.verticalCenter
+        // }
     }
 
     MouseArea {
+        id: mouseArea
+        hoverEnabled: true
         anchors.fill: parent
         onClicked: wrapper.clicked()
     }
