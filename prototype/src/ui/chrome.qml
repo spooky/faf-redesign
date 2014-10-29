@@ -207,8 +207,8 @@ Window {
         visible: false
         background: root.highlightColor
         textColor: root.textColor
-        x: root.width - windowControls.width - windowControls.anchors.rightMargin - user.anchors.rightMargin - width - border.width // absolute positioning to user control"s right
-        y: topArea.height + border.width
+        x: user.mapFromItem(user, user.x, 0).x - (width - user.width) + borderResizeHook.border.width // absolute positioning to user control's right
+        y: user.mapFromItem(user, 0, user.y).y + user.height + borderResizeHook.border.width // absolute positioning to user control's bottom
         z: 500
     }
 
