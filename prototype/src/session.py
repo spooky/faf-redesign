@@ -4,8 +4,8 @@ from PyQt5.QtNetwork import QTcpSocket, QHostAddress
 
 # HOST = 'lobby.faforever.com'
 # PORT = 8001
-HOST = '127.0.0.1'
-PORT = 12345
+HOST = 'localhost'
+PORT = 1234
 
 
 class Client(QObject):
@@ -19,9 +19,9 @@ class Client(QObject):
         self.socket = QTcpSocket(self)
         self.socket.setSocketOption(QTcpSocket.KeepAliveOption, 1)
 
-        self.socket.readyRead.connect(self.on_data)
         self.socket.connected.connect(self.on_connected)
         self.socket.disconnected.connect(self.on_disconnected)
+        self.socket.readyRead.connect(self.on_readyRead)
         self.socket.error.connect(self.on_error)
         self.socket.stateChanged.connect(self.on_stateChanged)
 
@@ -34,7 +34,7 @@ class Client(QObject):
         self.log.info('disconnecting')
         self.socket.disconnectFromHost()
 
-    def on_data(self):
+    def on_readyRead(self):
         data = bytes()
         while self.socket.bytesAvailable():
             data += self.socket.read(1024)
