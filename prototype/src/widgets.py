@@ -1,7 +1,7 @@
 from concurrent.futures import ThreadPoolExecutor
 from PyQt5.QtCore import QObject, QUrl, pyqtSignal
 from PyQt5.QtQml import QQmlApplicationEngine
-from PyQt5.QtGui import QGuiApplication
+from PyQt5.QtGui import QGuiApplication, QIcon
 from PyQt5.QtQuick import QQuickItem
 from models import TaskStatus
 from view_models import MainWindowViewModel, LoginViewModel
@@ -15,6 +15,7 @@ class Application(QGuiApplication):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.__taskExecutor = ThreadPoolExecutor(max_workers=1)
+        self.setWindowIcon(QIcon('ui/icons/faf.ico'))
 
     def getTaskExecutor(self):
         return self.__taskExecutor
