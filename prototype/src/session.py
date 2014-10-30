@@ -1,11 +1,11 @@
 import logging
 from PyQt5.QtCore import QObject
-from PyQt5.QtNetwork import QTcpSocket, QHostAddress
+from PyQt5.QtNetwork import QTcpSocket
 
 # HOST = 'lobby.faforever.com'
 # PORT = 8001
 HOST = 'localhost'
-PORT = 1234
+PORT = 12345
 
 
 class Client(QObject):
@@ -28,7 +28,7 @@ class Client(QObject):
     def connect(self, host=HOST, port=PORT):
         if not self.socket.isOpen():
             self.log.info('connecting to {}:{}'.format(host, port))
-            self.socket.connectToHost(QHostAddress(host), port)
+            self.socket.connectToHost(host, port)
 
     def disconnect(self):
         self.log.info('disconnecting')
@@ -52,4 +52,4 @@ class Client(QObject):
 
     def on_stateChanged(self, state):
         states = ['Unconnected', 'HostLookup', 'Connecting', 'Connected', 'Bound', 'Closing', 'Listening']
-        self.log.debug('state changed to {}'.format(states[state]))
+        self.log.debug('state changed to {} ({})'.format(states[state], state))
