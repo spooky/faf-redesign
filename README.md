@@ -7,4 +7,5 @@ Requirements
 ------------
 
 * Qt 5.3
+* Qt5-svg
 * PyQt 5.3
