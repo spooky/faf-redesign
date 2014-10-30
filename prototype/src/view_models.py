@@ -85,7 +85,16 @@ class LoginViewModel(QObject):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.login.connect(self.on_login)
-        self.s = session.Client(self)
+        self.client = session.Client(self)
 
     def on_login(self, username, password):
-        self.s.connect()
+        self.client.login(username, password, self.on_login_success, self.on_login_failed)
+
+    def on_login_success(self):
+        self.client.available_games(self.on_games_available)
+
+    def on_login_failed(self):
+        self.log.debug('login failed')
+
+    def on_games_available(self, games):
+        self.log.debug(games)
