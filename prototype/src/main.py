@@ -3,7 +3,7 @@ import json
 import logging
 import logging.config
 from widgets import Application
-
+from quamash import QEventLoop
 
 def configureLogging():
     try:
@@ -12,6 +12,7 @@ def configureLogging():
     except:
         import utils
         logging.basicConfig(level=logging.WARNING, handlers=[utils.QtHandler()])
+
 
 if __name__ == '__main__':
     app = Application(sys.argv)
@@ -24,5 +25,7 @@ if __name__ == '__main__':
 
     # from samples import run_background_task_samples
     # run_background_task_samples()
+    loop = QEventLoop(app)
 
-    sys.exit(app.exec_())
+    with loop:
+        loop.run_forever()
