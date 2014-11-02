@@ -29,8 +29,6 @@ if __name__ == '__main__':
 
     app.start()
 
-    # from samples import run_background_task_samples
-    # run_background_task_samples()
     loop = QEventLoop(app)
 
     with loop:
