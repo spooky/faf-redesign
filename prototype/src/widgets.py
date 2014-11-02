@@ -15,7 +15,10 @@ class Application(QGuiApplication):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.__taskExecutor = ThreadPoolExecutor(max_workers=1)
-        self.setWindowIcon(QIcon('ui/icons/faf.ico'))
+        try:
+            self.setWindowIcon(QIcon('ui/icons/faf.ico'))
+        except AttributeError:
+            pass
 
     def getTaskExecutor(self):
         return self.__taskExecutor
