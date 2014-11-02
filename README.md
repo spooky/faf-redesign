@@ -8,4 +8,5 @@ Requirements
 
 * Qt 5.3
 * Qt5-svg
+* Qt-graphicaleffects
 * PyQt 5.3
