@@ -9,15 +9,16 @@ Rectangle {
     states: [
         State {
             name: "open"
-            PropertyChanges { target: wrapper; color: background }
+            PropertyChanges { target: wrapper; color: mouseArea.containsMouse ? hover : background }
         },
         State {
             name: "closed"
-            PropertyChanges { target: wrapper; color: mouseArea.containsMouse ? "#454545" : "transparent" }
+            PropertyChanges { target: wrapper; color: mouseArea.containsMouse ? hover : "transparent" }
         }
     ]
 
     property string background
+    property string hover
     signal clicked
 
     Row {

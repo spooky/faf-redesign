@@ -2,7 +2,6 @@ import QtQuick 2.2
 import QtQuick.Controls 1.1
 import QtQuick.Window 2.1
 import QtQuick.Controls.Styles 1.1
-import QtGraphicalEffects 1.0
 
 Window {
     id: root
@@ -106,6 +105,7 @@ Window {
                 anchors.top: parent.top
                 anchors.right: windowControls.left
                 background: root.highlightColor
+                hover: root.altHighlightColor
                 onClicked: {
                     var f = logIn.visible;
                     logIn.visible = !f
