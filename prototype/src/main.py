@@ -5,6 +5,12 @@ import logging.config
 from widgets import Application
 from quamash import QEventLoop
 
+try:
+    import signal
+    signal.signal(signal.SIGINT, signal.SIG_DFL)
+except ImportError:
+    pass
+
 def configureLogging():
     try:
         with open('logging.json') as config:
