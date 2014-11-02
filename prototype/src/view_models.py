@@ -91,10 +91,11 @@ class LoginViewModel(QObject):
         self.client.login(username, password, self.on_login_success, self.on_login_failed)
 
     def on_login_success(self):
-        self.client.available_games(self.on_games_available)
+        self.log.debug('login successful')
+        self.client.startup_state(self.on_startup_state)
 
     def on_login_failed(self):
         self.log.debug('login failed')
 
-    def on_games_available(self, games):
-        self.log.debug(games)
+    def on_startup_state(self, state):
+        self.log.debug('startup state {}'.format(state))

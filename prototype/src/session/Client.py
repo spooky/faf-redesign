@@ -59,12 +59,9 @@ class Client(QObject):
     def login(self, user, password, callback, errback):
         self._connect()
         self.user = user
-        # import hashlib
-        # self.password_hash = hashlib.md5(str(password))
+        import hashlib
+        self.password_hash = hashlib.sha256(password.encode()).hexdigest()
 
-    def startup_state(self):
+    def startup_state(self):  # TODO: needs a better name
         ''' sends the hello command to get current games state '''
-        pass
-
-    def available_games(self):
         pass
