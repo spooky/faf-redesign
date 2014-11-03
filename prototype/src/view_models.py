@@ -1,5 +1,16 @@
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal
 import session
+import logging
+
+# TODO: move somewhere
+import functools
+import asyncio
+def async_slot(f):
+    @functools.wraps(f)
+    def wrapper(*args, **kwargs):
+        asyncio.async(f(*args, **kwargs))
+
+    return wrapper
 
 
 class MainWindowViewModel(QObject):  # TODO: use MetaClass(ish) model to handle notifyable properties?
@@ -84,17 +95,19 @@ class LoginViewModel(QObject):
 
     def __init__(self, parent=None):
         super().__init__(parent)
+        self.log = logging.getLogger(__name__)
+
         self.login.connect(self.on_login)
         self.client = session.Client(self)
 
+    @async_slot
     def on_login(self, username, password):
-        self.client.login(username, password, self.on_login_success, self.on_login_failed)
+        try:
+            self.log.debug("Logging in...")
+            session = yield from self.client.login(username, password)
+            self.log.debug("Listing games...")
+            games = yield from self.client.available_games()
+            self.log.debug(games)
+        except Exception as ex:
+            self.log.debug('login failed: {}'.format(ex))
 
-    def on_login_success(self):
-        self.client.available_games(self.on_games_available)
-
-    def on_login_failed(self):
-        self.log.debug('login failed')
-
-    def on_games_available(self, games):
-        self.log.debug(games)

@@ -3,6 +3,8 @@ import json
 from PyQt5.QtCore import QObject, QDataStream, QIODevice, QByteArray
 from PyQt5.QtNetwork import QTcpSocket
 
+import asyncio
+
 HOST = 'lobby.faforever.com'
 PORT = 8001
 # HOST = 'localhost'
@@ -61,25 +63,38 @@ class Client(QObject):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.log = logging.getLogger(__name__)
-        self._socket_setup()
+        self._socket = None
 
-        self._connected = False
-
-    def _socket_setup(self):
-        self.socket = QTcpSocket(self)
-        self.socket.setSocketOption(QTcpSocket.KeepAliveOption, 1)
-
-        self.socket.connected.connect(self._on_connected)
-        self.socket.disconnected.connect(self._on_disconnected)
-        self.socket.readyRead.connect(self._on_readyRead)
-        self.socket.error.connect(self._on_error)
-        self.socket.stateChanged.connect(self._on_stateChanged)
-
+    @asyncio.coroutine
     def _connect(self, host=HOST, port=PORT):
-        if not self._connected:
-            self.log.info('connecting to {}:{}'.format(host, port))
-            self.socket.connectToHost(host, port)
-            self._connected = True
+        f = asyncio.Future()
+
+        if self._socket is not None:
+            f.set_exception(Exception("Client is already connecting"))
+
+        self._socket = QTcpSocket(self)
+        self._socket.setSocketOption(QTcpSocket.KeepAliveOption, 1)
+
+        def on_connected():
+            self.log.info('connected')
+            self._protocol = FafProtocolAdapter(self._socket)
+
+            self._socket.disconnected.connect(self._on_disconnected)
+            self._socket.readyRead.connect(self._on_readyRead)
+
+            f.set_result(None)
+
+        def on_error(error):
+            f.set_exception(error)
+
+        self._socket.connected.connect(on_connected)
+        self._socket.error.connect(on_error)
+        self._socket.stateChanged.connect(self._on_stateChanged)
+
+        self.log.info('connecting to {}:{}'.format(host, port))
+        self._socket.connectToHost(host, port)
+
+        return f
 
     def _disconnect(self):
         self.log.info('disconnecting')
@@ -88,23 +103,22 @@ class Client(QObject):
     def _on_readyRead(self):
         self.log.debug('received {}'.format(self._protocol.receive()))
 
-    def _on_connected(self):
-        self.log.info('connected')
-        self._protocol = FafProtocolAdapter(self.socket)
-        self._protocol.send(dict(command='ask_session'), self.user)
-
     def _on_disconnected(self):
         self.log.info('disconnected')
-
-    def _on_error(self, error):
-        self.log.error('error {}: {}'.format(error, self.socket.errorString()))
+        self._socket = None
 
     def _on_stateChanged(self, state):
         states = ['Unconnected', 'HostLookup', 'Connecting', 'Connected', 'Bound', 'Closing', 'Listening']
         self.log.debug('state changed to {} ({})'.format(states[state], state))
 
-    def login(self, user, password, callback, errback):
-        self._connect()
-        self.user = user
+    @asyncio.coroutine
+    def _get_session(self, user):
+        self._protocol.send(dict(command='ask_session'), user)
+
+    @asyncio.coroutine
+    def login(self, user, password):
+        yield from self._connect()
+        yield from self._get_session(user)
+
         # import hashlib
         # self.password_hash = hashlib.md5(str(password))
