@@ -11,13 +11,14 @@ try:
 except ImportError:
     pass
 
+
 def configureLogging():
     try:
         with open('logging.json') as config:
             logging.config.dictConfig(json.load(config))
     except:
-        import utils
-        logging.basicConfig(level=logging.WARNING, handlers=[utils.QtHandler()])
+        from utils.logging import QtHandler
+        logging.basicConfig(level=logging.WARNING, handlers=[QtHandler()])
 
 
 if __name__ == '__main__':

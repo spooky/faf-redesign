@@ -1,6 +1,7 @@
-from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal
-import session
 import logging
+import session
+from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal
+
 
 # TODO: move somewhere
 import functools
@@ -104,9 +105,7 @@ class LoginViewModel(QObject):
     def on_login(self, username, password):
         try:
             self.log.debug("Logging in...")
-            session = yield from self.client.login(username, password)
-            self.log.debug("Listing games...")
-            games = yield from self.client.available_games()
-            self.log.debug(games)
+            start_state = yield from self.client.login(username, password)
+            self.log.debug(start_state)
         except Exception as ex:
             self.log.debug('login failed: {}'.format(ex))

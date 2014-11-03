@@ -1,9 +1,9 @@
 import logging
+import asyncio
 from PyQt5.QtCore import QObject
 from PyQt5.QtNetwork import QTcpSocket
 from .FafProtocolAdapter import FafProtocolAdapter
 
-import asyncio
 
 HOST = 'lobby.faforever.com'
 PORT = 8001
@@ -17,6 +17,7 @@ class Client(QObject):
         super().__init__(parent)
         self.log = logging.getLogger(__name__)
         self._socket = None
+        self._awaiting_for_response = dict()
 
     @asyncio.coroutine
     def _connect(self, host=HOST, port=PORT):
@@ -54,7 +55,13 @@ class Client(QObject):
         self.socket.disconnectFromHost()
 
     def _on_readyRead(self):
-        self.log.debug('received {}'.format(self._protocol.receive()))
+        response = self._protocol.receive()
+        if response:
+            self.log.debug('received {}'.format(response))
+
+        command = response['command'] if response and 'command' in response else None
+        if command in self._awaiting_for_response:
+            self._awaiting_for_response[command].set_result(response)
 
     def _on_disconnected(self):
         self.log.info('disconnected')
@@ -66,12 +73,33 @@ class Client(QObject):
 
     @asyncio.coroutine
     def _get_session(self, user):
+        self.log.debug('sending ask_session')
         self._protocol.send(dict(command='ask_session'), user)
+
+        f = asyncio.Future()
+        self._awaiting_for_response['welcome'] = f
+        return f
+
+    @asyncio.coroutine
+    def _hello(self, session, user, hash):
+        local_ip = self._socket.localAddress().toString()
+        unique_id = ''
+        self.log.debug('sending hello')
+        self._protocol.send(dict(command='hello', session=session, login=user, password=hash, version=0, unique_id=unique_id, local_ip=local_ip), user, session)
+
+        f = asyncio.Future()
+        self._awaiting_for_response['welcome'] = f
+        return f
 
     @asyncio.coroutine
     def login(self, user, password):
-        yield from self._connect()
-        yield from self._get_session(user)
+        import hashlib
+        password_hash = hashlib.sha256(password.encode()).hexdigest()
 
-        # import hashlib
-        # self.password_hash = hashlib.md5(str(password))
+        yield from self._connect()
+        resp = yield from self._get_session(user)
+        start_state = yield from self._hello(resp['session'], user, password_hash)
+        self.log.debug('response to hello')
+        self.log.debug(start_state)
+
+        return start_state

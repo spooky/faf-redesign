@@ -1,6 +1,7 @@
 import logging
 from widgets import Application
 
+
 class QtHandler(logging.Handler):
 
     def __init__(self, *args, **kwargs):

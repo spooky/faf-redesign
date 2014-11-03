@@ -12,7 +12,7 @@
       "stream": "ext://sys.stdout"
     },
     "faf_console": {
-      "class": "utils.QtHandler",
+      "class": "utils.logging.QtHandler",
       "level": "DEBUG",
       "formatter": "simple"
     }
