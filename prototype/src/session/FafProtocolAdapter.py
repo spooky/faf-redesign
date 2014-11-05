@@ -56,6 +56,7 @@ class FafProtocolAdapter():
                 data = json.loads(reply)
                 return data
             else:
+                self.log.debug('received {}'.format(reply))
                 if hasattr(self, '_act_on_' + reply.lower()):
                     getattr(self, '_act_on_' + reply.lower())(stream)
                 else:
