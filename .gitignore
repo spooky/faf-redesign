@@ -3,3 +3,4 @@ __pycache__
 *.sublime*
 /prototype/src/*.pyc
 .*.sw*
+private.py

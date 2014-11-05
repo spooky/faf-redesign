@@ -4,6 +4,12 @@ from PyQt5.QtCore import QObject
 from PyQt5.QtNetwork import QTcpSocket
 from .FafProtocolAdapter import FafProtocolAdapter
 
+UUID = ''
+try:
+    import private
+    UUID = private.UUID
+except ImportError:
+    pass
 
 HOST = 'lobby.faforever.com'
 PORT = 8001
@@ -83,7 +89,7 @@ class Client(QObject):
     @asyncio.coroutine
     def _hello(self, session, user, hash):
         local_ip = self._socket.localAddress().toString()
-        unique_id = ''
+        unique_id = UUID
         self.log.debug('sending hello')
         self._protocol.send(dict(command='hello', session=session, login=user, password=hash, version=0, unique_id=unique_id, local_ip=local_ip), user, session)
 
