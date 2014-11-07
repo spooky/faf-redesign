@@ -33,4 +33,4 @@ if __name__ == '__main__':
     loop = QEventLoop(app)
 
     with loop:
-        loop.run_forever()
+        sys.exit(loop.run_forever())
