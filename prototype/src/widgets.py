@@ -18,6 +18,11 @@ class Application(QGuiApplication):
         except AttributeError:
             pass
 
+        # required for settings persistance
+        self.setOrganizationName("Forged Alliance Forever")
+        self.setOrganizationDomain("faforever.com")
+        self.setApplicationName("lobby")
+
     def start(self):
         self.mainWindow = MainWindow(self)
         self.mainWindow.show()

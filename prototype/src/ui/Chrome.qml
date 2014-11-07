@@ -2,6 +2,7 @@ import QtQuick 2.2
 import QtQuick.Controls 1.1
 import QtQuick.Window 2.1
 import QtQuick.Controls.Styles 1.1
+import Qt.labs.settings 1.0
 
 Window {
     id: root
@@ -17,6 +18,13 @@ Window {
     property string highlightColor: "#2f2f2f"
     property string altHighlightColor: "#454545"
     property string textColor: "#969696"
+
+    Settings {
+        property alias x: root.x
+        property alias y: root.y
+        property alias width: root.width
+        property alias height: root.height
+    }
 
     Action {
         id: closeWindow
