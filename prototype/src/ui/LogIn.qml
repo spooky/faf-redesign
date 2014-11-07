@@ -1,5 +1,7 @@
 import QtQuick 2.2
 import QtQuick.Controls 1.2
+import QtQuick.Controls.Styles 1.2
+
 
 Rectangle {
     property string background
@@ -20,7 +22,7 @@ Rectangle {
         width: 150
 
         Text {
-            text: "User Name"
+            text: qsTr("User Name")
             color: textColor
         }
 
@@ -30,7 +32,7 @@ Rectangle {
         }
 
         Text {
-            text: "Password"
+            text: qsTr("Password")
             color: textColor
         }
 
@@ -40,10 +42,29 @@ Rectangle {
             width: parent.width
         }
 
-        Button {
-            text: "Log In"
-            anchors.right: parent.right
-            onClicked: loginModel.login(userName.text, password.text) // is that how you do it?
+        Item {
+            width: parent.width
+            height: loginButton.height
+
+            CheckBox {
+                id: remember
+                anchors.left: parent.left
+                anchors.verticalCenter: parent.verticalCenter
+                style: CheckBoxStyle {
+                    label: Text {
+                        text: qsTr("Remember")
+                        color: textColor
+                    }
+                }
+            }
+
+            Button {
+                id: loginButton
+                text: qsTr("Log In")
+                anchors.right: parent.right
+                anchors.verticalCenter: parent.verticalCenter
+                onClicked: loginModel.login(userName.text, password.text, remember.checked) // is that how you do it?
+            }
         }
     }
 }

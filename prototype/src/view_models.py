@@ -82,7 +82,7 @@ class MainWindowViewModel(QObject):  # TODO: use MetaClass(ish) model to handle 
 
 
 class LoginViewModel(QObject):
-    login = pyqtSignal(str, str)
+    login = pyqtSignal(str, str, bool)
 
     def __init__(self, client, parent=None):
         super().__init__(parent)
@@ -92,7 +92,7 @@ class LoginViewModel(QObject):
         self.client = client
 
     @async_slot
-    def on_login(self, username, password):
+    def on_login(self, username, password, remember):
         try:
             self.log.info('logging in...')
             result = yield from self.client.login(username, password)
