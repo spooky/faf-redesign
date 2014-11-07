@@ -104,7 +104,7 @@ class LoginViewModel(QObject):
     @async_slot
     def on_login(self, username, password):
         try:
-            self.log.debug("Logging in...")
+            self.log.debug('logging in...')
             start_state = yield from self.client.login(username, password)
             self.log.debug(start_state)
         except Exception as ex:
