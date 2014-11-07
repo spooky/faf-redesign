@@ -1,10 +1,9 @@
-from concurrent.futures import ThreadPoolExecutor
 from PyQt5.QtCore import QObject, QUrl, pyqtSignal
 from PyQt5.QtQml import QQmlApplicationEngine
 from PyQt5.QtGui import QGuiApplication, QIcon
 from PyQt5.QtQuick import QQuickItem
-from models import TaskStatus
 from view_models import MainWindowViewModel, LoginViewModel
+from session.Client import Client
 
 LOG_BUFFER_SIZE = 1000
 
@@ -14,18 +13,13 @@ class Application(QGuiApplication):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.__taskExecutor = ThreadPoolExecutor(max_workers=1)
         try:
             self.setWindowIcon(QIcon('ui/icons/faf.ico'))
         except AttributeError:
             pass
 
-    def getTaskExecutor(self):
-        return self.__taskExecutor
-
     def start(self):
         self.mainWindow = MainWindow(self)
-        self.taskStatus = TaskStatus(self.mainWindow.model)
         self.mainWindow.show()
 
     def log(self, msg):
@@ -37,8 +31,10 @@ class MainWindow(QObject):
     def __init__(self, parent=None):
         super().__init__(parent)
 
+        self.client = Client(self)
+
         self.model = MainWindowViewModel(self)
-        self.loginModel = LoginViewModel(self)
+        self.loginModel = LoginViewModel(self.client, self)
 
         self.engine = QQmlApplicationEngine(self)
         self.engine.rootContext().setContextProperty('model', self.model)

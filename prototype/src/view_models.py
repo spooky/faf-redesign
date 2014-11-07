@@ -1,17 +1,7 @@
 import logging
-import session
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal
-
-
-# TODO: move somewhere
-import functools
-import asyncio
-def async_slot(f):
-    @functools.wraps(f)
-    def wrapper(*args, **kwargs):
-        asyncio.async(f(*args, **kwargs))
-
-    return wrapper
+from utils.async import async_slot
+from session.Client import Client
 
 
 class MainWindowViewModel(QObject):  # TODO: use MetaClass(ish) model to handle notifyable properties?
@@ -94,18 +84,18 @@ class MainWindowViewModel(QObject):  # TODO: use MetaClass(ish) model to handle 
 class LoginViewModel(QObject):
     login = pyqtSignal(str, str)
 
-    def __init__(self, parent=None):
+    def __init__(self, client, parent=None):
         super().__init__(parent)
         self.log = logging.getLogger(__name__)
 
         self.login.connect(self.on_login)
-        self.client = session.Client(self)
+        self.client = client
 
     @async_slot
     def on_login(self, username, password):
         try:
             self.log.debug('logging in...')
-            start_state = yield from self.client.login(username, password)
-            self.log.debug(start_state)
+            result = yield from self.client.login(username, password)
+            self.log.debug('login successful? {}'.format(result))
         except Exception as ex:
             self.log.debug('login failed: {}'.format(ex))

@@ -32,7 +32,8 @@ class _ProactorEventLoop(QtCore.QObject, asyncio.ProactorEventLoop):
 				self._logger.warn('Event callback failed: {}'.format(e))
 				f.set_exception(e)
 			else:
-				f.set_result(value)
+				if not f.done():
+					f.set_result(value)
 
 	def _before_run_forever(self):
 		self.__event_poller.start(self._selector)
