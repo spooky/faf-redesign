@@ -83,32 +83,56 @@ class MainWindowViewModel(QObject):  # TODO: use MetaClass(ish) model to handle 
 class LoginViewModel(QObject):
     login = pyqtSignal(str, str, bool)
 
-    def __init__(self, client, parent=None):
+    def __init__(self, client, user, password, parent=None):
         super().__init__(parent)
         self.log = logging.getLogger(__name__)
 
         self.login.connect(self.on_login)
         self.client = client
+        self.user = user
+        self.password = password
+
+    user_changed = pyqtSignal(str)
+
+    @pyqtProperty(str, notify=user_changed)
+    def user(self):
+        return self._user
+
+    @user.setter
+    def user(self, value):
+        self._user = value
+        self.user_changed.emit(value)
+
+    password_changed = pyqtSignal(str)
+
+    @pyqtProperty(str, notify=password_changed)
+    def password(self):
+        return self._password
+
+    @password.setter
+    def password(self, value):
+        self._password = value
+        self.password_changed.emit(value)
 
     @async_slot
-    def on_login(self, username, password, remember):
+    def on_login(self, user, password, remember):
         try:
             import hashlib
             pass_hash = hashlib.sha256(password.encode()).hexdigest()
 
             self.log.info('logging in...')
-            result = yield from self.client.login(username, pass_hash)
-            self._store_credentials(username, pass_hash, remember)
+            result = yield from self.client.login(user, pass_hash)
+            self._store_credentials(user, pass_hash, remember)
             self.log.debug('login successful? {}'.format(result))
         except Exception as ex:
             self.log.info('login failed: {}'.format(ex))
 
-    def _store_credentials(self, username, password, remember):
+    def _store_credentials(self, user, password, remember):
         # TODO: DRY (widgets.MainWindow._read_settings)
         import settings
         s = settings.get()
         s.beginGroup('login')
-        s.setValue('user', username)
+        s.setValue('user', user)
         s.setValue('password', password)
         s.setValue('remember', remember)
         s.endGroup()

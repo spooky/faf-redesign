@@ -249,7 +249,7 @@ Window {
         transitions: Transition { NumberAnimation { target: debugWindowOffset; property: "y"; duration: 200 } }
 
         TextArea {
-            objectName: "log"
+            objectName: "console"
             anchors.fill: parent
             frameVisible: false
             readOnly: true

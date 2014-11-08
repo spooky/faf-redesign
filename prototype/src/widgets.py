@@ -5,6 +5,7 @@ from PyQt5.QtGui import QGuiApplication, QIcon
 from PyQt5.QtQuick import QQuickItem
 
 import settings
+from utils.async import async_slot
 from view_models import MainWindowViewModel, LoginViewModel
 from session.Client import Client
 
@@ -40,8 +41,11 @@ class MainWindow(QObject):
 
         self.client = Client(self)
 
+        if self.remember:
+            self._autologin()
+
         self.model = MainWindowViewModel(self)
-        self.loginModel = LoginViewModel(self.client, self)
+        self.loginModel = LoginViewModel(self.client, self.user, self.password, self)
 
         self.engine = QQmlApplicationEngine(self)
         self.engine.rootContext().setContextProperty('model', self.model)
@@ -52,7 +56,7 @@ class MainWindow(QObject):
         self.window = self.engine.rootObjects()[0]
 
         # wire up logging console
-        self.log = self.window.findChild(QQuickItem, 'log')
+        self.console = self.window.findChild(QQuickItem, 'console')
         parent.log_changed.connect(self._log)
 
     def show(self):
@@ -61,17 +65,26 @@ class MainWindow(QObject):
     def _read_settings(self):
         stored = settings.get()
         stored.beginGroup('login')
-        user = stored.value('user')
-        pwd = stored.value('password')
-        remember = stored.value('remember', False)
+        self.user = stored.value('user')
+        self.password = stored.value('password')
+        self.remember = bool(stored.value('remember'))
+
         stored.endGroup()
 
-        self.log.debug(dict(user=user, password=pwd, remember=remember))
+    @async_slot
+    def _autologin(self):
+        self.log.debug('_autologin')
+        try:
+            # TODO
+            result = yield from self.client.login(self.user, self.password)
+            self.log.debug('autologin result: {}'.format(result))
+        except Exception as e:
+            self.log.error('autologin failed. {}'.format(e))
 
     def _log(self, msg):
         # replace with collections.deque binding(ish)?
-        if self.log.property('lineCount') == LOG_BUFFER_SIZE:
-            line_end = self.log.property('text').find('\n') + 1
-            self.log.remove(0, line_end)
+        if self.console.property('lineCount') == LOG_BUFFER_SIZE:
+            line_end = self.console.property('text').find('\n') + 1
+            self.console.remove(0, line_end)
 
-        self.log.append(msg)
+        self.console.append(msg)

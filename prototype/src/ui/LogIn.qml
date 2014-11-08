@@ -29,6 +29,7 @@ Rectangle {
         TextField {
             id: userName
             width: parent.width
+            text: loginModel.user
         }
 
         Text {
@@ -40,6 +41,7 @@ Rectangle {
             id: password
             echoMode: TextInput.Password
             width: parent.width
+            text: loginModel.password
         }
 
         Item {
