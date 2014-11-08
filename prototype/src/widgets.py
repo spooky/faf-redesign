@@ -1,9 +1,13 @@
+import logging
 from PyQt5.QtCore import QObject, QUrl, pyqtSignal
 from PyQt5.QtQml import QQmlApplicationEngine
 from PyQt5.QtGui import QGuiApplication, QIcon
 from PyQt5.QtQuick import QQuickItem
+
+import settings
 from view_models import MainWindowViewModel, LoginViewModel
 from session.Client import Client
+
 
 LOG_BUFFER_SIZE = 1000
 
@@ -13,15 +17,11 @@ class Application(QGuiApplication):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        settings.init(self)
         try:
             self.setWindowIcon(QIcon('ui/icons/faf.ico'))
         except AttributeError:
             pass
-
-        # required for settings persistance
-        self.setOrganizationName("Forged Alliance Forever")
-        self.setOrganizationDomain("faforever.com")
-        self.setApplicationName("lobby")
 
     def start(self):
         self.mainWindow = MainWindow(self)
@@ -35,6 +35,8 @@ class MainWindow(QObject):
 
     def __init__(self, parent=None):
         super().__init__(parent)
+        self.log = logging.getLogger(__name__)
+        self._read_settings()
 
         self.client = Client(self)
 
@@ -55,6 +57,16 @@ class MainWindow(QObject):
 
     def show(self):
         self.window.show()
+
+    def _read_settings(self):
+        stored = settings.get()
+        stored.beginGroup('login')
+        user = stored.value('user')
+        pwd = stored.value('password')
+        remember = stored.value('remember', False)
+        stored.endGroup()
+
+        self.log.debug(dict(user=user, password=pwd, remember=remember))
 
     def _log(self, msg):
         # replace with collections.deque binding(ish)?

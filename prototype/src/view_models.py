@@ -1,7 +1,6 @@
 import logging
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal
 from utils.async import async_slot
-from session.Client import Client
 
 
 class MainWindowViewModel(QObject):  # TODO: use MetaClass(ish) model to handle notifyable properties?
@@ -94,8 +93,22 @@ class LoginViewModel(QObject):
     @async_slot
     def on_login(self, username, password, remember):
         try:
+            import hashlib
+            pass_hash = hashlib.sha256(password.encode()).hexdigest()
+
             self.log.info('logging in...')
-            result = yield from self.client.login(username, password)
+            result = yield from self.client.login(username, pass_hash)
+            self._store_credentials(username, pass_hash, remember)
             self.log.debug('login successful? {}'.format(result))
         except Exception as ex:
             self.log.info('login failed: {}'.format(ex))
+
+    def _store_credentials(self, username, password, remember):
+        # TODO: DRY (widgets.MainWindow._read_settings)
+        import settings
+        s = settings.get()
+        s.beginGroup('login')
+        s.setValue('user', username)
+        s.setValue('password', password)
+        s.setValue('remember', remember)
+        s.endGroup()

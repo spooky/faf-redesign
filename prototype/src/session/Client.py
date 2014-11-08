@@ -15,9 +15,7 @@ class Client(QObject):
     def login(self, user, password):
         url = '{}/login'.format(AUTH_SERVICE_URL)
 
-        import hashlib
-        pass_hash = hashlib.sha256(password.encode()).hexdigest()
-        data = json.dumps({'username': user, 'password': pass_hash}).encode()
+        data = json.dumps({'username': user, 'password': password}).encode()
 
         body = yield from rest.post(url, data=data)
 

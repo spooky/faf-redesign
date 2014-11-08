@@ -19,11 +19,13 @@ Window {
     property string altHighlightColor: "#454545"
     property string textColor: "#969696"
 
+    // remember window geometry
     Settings {
         property alias x: root.x
         property alias y: root.y
         property alias width: root.width
         property alias height: root.height
+        // property alias visibility: root.visibility // TODO : maximized
     }
 
     Action {
