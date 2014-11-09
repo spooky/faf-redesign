@@ -2,6 +2,7 @@ import sys
 import json
 import logging
 import logging.config
+import asyncio
 from widgets import Application
 from quamash import QEventLoop
 
@@ -29,7 +30,7 @@ if __name__ == '__main__':
     log.info('starting app')
 
     loop = QEventLoop(app)
+    asyncio.set_event_loop(loop)
 
-    with loop:
-        app.start()
-        sys.exit(loop.run_forever())
+    app.start()
+    sys.exit(loop.run_forever())
