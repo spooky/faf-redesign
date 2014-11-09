@@ -132,7 +132,9 @@ class LoginViewModel(QObject):
         import settings
         s = settings.get()
         s.beginGroup('login')
+
         s.setValue('user', user)
         s.setValue('password', password)
         s.setValue('remember', remember)
+
         s.endGroup()

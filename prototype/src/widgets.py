@@ -65,9 +65,10 @@ class MainWindow(QObject):
     def _read_settings(self):
         stored = settings.get()
         stored.beginGroup('login')
+
         self.user = stored.value('user')
         self.password = stored.value('password')
-        self.remember = bool(stored.value('remember'))
+        self.remember = stored.value('remember') == 'true'
 
         stored.endGroup()
 
