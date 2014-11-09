@@ -73,9 +73,7 @@ class MainWindow(QObject):
 
     @async_slot
     def _autologin(self):
-        self.log.debug('_autologin')
         try:
-            # TODO
             result = yield from self.client.login(self.user, self.password)
             self.log.debug('autologin result: {}'.format(result))
         except Exception as e:

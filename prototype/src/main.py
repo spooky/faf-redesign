@@ -28,9 +28,8 @@ if __name__ == '__main__':
     log = logging.getLogger(__name__)
     log.info('starting app')
 
-    app.start()
-
     loop = QEventLoop(app)
 
     with loop:
+        app.start()
         sys.exit(loop.run_forever())
