@@ -8,8 +8,6 @@ Rectangle {
     property string textColor
     property int padding: 5
 
-    signal clicked
-
     id: wrapper
     color: background
     width: childrenRect.width + 2*padding
@@ -50,6 +48,7 @@ Rectangle {
 
             CheckBox {
                 id: remember
+                checked: loginModel.remember
                 anchors.left: parent.left
                 anchors.verticalCenter: parent.verticalCenter
                 style: CheckBoxStyle {

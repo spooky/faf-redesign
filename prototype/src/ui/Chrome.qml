@@ -117,8 +117,8 @@ Window {
                 background: root.highlightColor
                 hover: root.altHighlightColor
                 onClicked: {
-                    var f = logIn.visible;
-                    logIn.visible = !f
+                    var f = userPanel.visible;
+                    userPanel.visible = !f
                     state = f ? "closed" : "open"
                 }
         }
@@ -212,14 +212,26 @@ Window {
         }
     }
 
-    LogIn {
-        id: logIn
+    Item {
+        id: userPanel
         visible: false
-        background: root.highlightColor
-        textColor: root.textColor
         x: user.mapFromItem(user, user.x, 0).x - (width - user.width) + borderResizeHook.border.width // absolute positioning to user control's right
         y: user.mapFromItem(user, 0, user.y).y + user.height + borderResizeHook.border.width // absolute positioning to user control's bottom
         z: 500
+        width: childrenRect.width
+        height: childrenRect.height
+
+        LogIn {
+            visible: !loginModel.logged_in
+            background: root.highlightColor
+            textColor: root.textColor
+        }
+
+        UserPanel {
+            visible: loginModel.logged_in
+            background: root.highlightColor
+            textColor: root.textColor
+        }
     }
 
     Item {

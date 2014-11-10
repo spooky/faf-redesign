@@ -26,3 +26,13 @@ class Client(QObject):
         self.email = body['email']
 
         return body['success']
+
+    @asyncio.coroutine
+    def logout(self):
+        url = '{}/logout'.format(AUTH_SERVICE_URL)
+
+        self.session_id = None
+        self.user_id = None
+        self.email = None
+
+        return True

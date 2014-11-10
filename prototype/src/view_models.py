@@ -82,15 +82,19 @@ class MainWindowViewModel(QObject):  # TODO: use MetaClass(ish) model to handle 
 
 class LoginViewModel(QObject):
     login = pyqtSignal(str, str, bool)
+    logout = pyqtSignal()
 
-    def __init__(self, client, user, password, parent=None):
+    def __init__(self, client, user, password, remember, parent=None):
         super().__init__(parent)
         self.log = logging.getLogger(__name__)
 
         self.login.connect(self.on_login)
+        self.logout.connect(self.on_logout)
         self.client = client
         self.user = user
         self.password = password
+        self.remember = remember
+        self.logged_in = False
 
     user_changed = pyqtSignal(str)
 
@@ -114,6 +118,28 @@ class LoginViewModel(QObject):
         self._password = value
         self.password_changed.emit(value)
 
+    remember_changed = pyqtSignal(bool)
+
+    @pyqtProperty(bool, notify=remember_changed)
+    def remember(self):
+        return self._remember
+
+    @remember.setter
+    def remember(self, value):
+        self._remember = value
+        self.remember_changed.emit(value)
+
+    logged_in_changed = pyqtSignal(bool)
+
+    @pyqtProperty(bool, notify=logged_in_changed)
+    def logged_in(self):
+        return self._logged_in
+
+    @logged_in.setter
+    def logged_in(self, value):
+        self._logged_in = value
+        self.logged_in_changed.emit(value)
+
     @async_slot
     def on_login(self, user, password, remember):
         try:
@@ -121,11 +147,20 @@ class LoginViewModel(QObject):
             pass_hash = hashlib.sha256(password.encode()).hexdigest()
 
             self.log.info('logging in...')
-            result = yield from self.client.login(user, pass_hash)
+            self.logged_in = yield from self.client.login(user, pass_hash)
             self._store_credentials(user, pass_hash, remember)
-            self.log.debug('login successful? {}'.format(result))
+            self.log.debug('login successful? {}'.format(self.logged_in))
         except Exception as ex:
-            self.log.info('login failed: {}'.format(ex))
+            self.log.warn('login failed: {}'.format(ex))
+
+    @async_slot
+    def on_logout(self):
+        try:
+            self.log.info('logging out...')
+            self.logged_in = not (yield from self.client.logout())
+            self.log.debug('logout successful? {}'.format(not self.logged_in))
+        except Exception as ex:
+            self.log.warn('logout failed: {}'.format(ex))
 
     def _store_credentials(self, user, password, remember):
         # TODO: DRY (widgets.MainWindow._read_settings)
