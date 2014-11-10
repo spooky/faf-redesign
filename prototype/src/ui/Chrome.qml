@@ -345,11 +345,23 @@ Window {
             color: "#202025"
             anchors.fill: parent
 
-            // ActionIcon {
-            //     anchors.centerIn: parent
-            //     source: "icons/lightbulb.svg"
-            //     size: 256
-            // }
+            Grid {
+                anchors.fill: parent
+
+                NewGame {
+                    textColor: root.textColor
+                    altColor: root.altHighlightColor
+                    highlightColor: root.highlightColor
+                }
+
+//                ActionIcon {
+//                     anchors.centerIn: parent
+//                     source: "icons/lightbulb.svg"
+//                     size: 256
+//                 }
+
+            }
+
         }
     }
 

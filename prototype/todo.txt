@@ -1,5 +1,3 @@
-* login ui
-* login service
 * settings file
 * game list
 * main menu
