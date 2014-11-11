@@ -347,19 +347,14 @@ Window {
 
             Grid {
                 anchors.fill: parent
+                anchors.margins: 5
+                spacing: 5
 
                 NewGame {
                     textColor: root.textColor
                     altColor: root.altHighlightColor
                     highlightColor: root.highlightColor
                 }
-
-//                ActionIcon {
-//                     anchors.centerIn: parent
-//                     source: "icons/lightbulb.svg"
-//                     size: 256
-//                 }
-
             }
 
         }

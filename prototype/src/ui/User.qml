@@ -42,11 +42,6 @@ Rectangle {
                 anchors.centerIn: parent
             }
         }
-        // ActionIcon {
-        //     source: "icons/user.svg"
-        //     size: 30
-        //     anchors.verticalCenter: parent.verticalCenter
-        // }
     }
 
     MouseArea {
