@@ -2,7 +2,7 @@ import logging
 import json
 import asyncio
 from PyQt5.QtCore import QObject
-from . import AUTH_SERVICE_URL, rest
+from . import AUTH_SERVICE_URL, FAF_SERVICE_URL, rest
 
 
 class Client(QObject):
@@ -19,8 +19,6 @@ class Client(QObject):
 
         body = yield from rest.post(url, data=data)
 
-        self.log.debug(body)
-
         self.session_id = body['session_id']
         self.user_id = body['user_id']
         self.email = body['email']
@@ -36,3 +34,11 @@ class Client(QObject):
         self.email = None
 
         return True
+
+    @asyncio.coroutine
+    def get_games(self):
+        url = '{}/games/current'.format(FAF_SERVICE_URL)
+
+        body = yield from rest.get(url)
+
+        return body

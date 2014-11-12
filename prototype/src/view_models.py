@@ -173,3 +173,7 @@ class LoginViewModel(QObject):
         s.setValue('remember', remember)
 
         s.endGroup()
+
+
+class GameViewModel(QObject):
+    pass

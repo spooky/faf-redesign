@@ -12,8 +12,8 @@ Rectangle {
     width: 200
     height: 100
     color: mouseArea.containsMouse ? highlightColor : "transparent"
-    border.color: altColor
-    border.width: 2
+    // border.color: altColor
+    // border.width: 2
     radius: height*0.15
 
     Image {
@@ -32,6 +32,15 @@ Rectangle {
         anchors.verticalCenter: parent.verticalCenter
         anchors.right: parent.right
         anchors.rightMargin: padding
+    }
+
+    BorderImage {
+        source: "icons/dashborder.svg"
+        width: parent.width
+        height: parent.height
+        horizontalTileMode: BorderImage.Stretch
+        verticalTileMode: BorderImage.Stretch
+        smooth: true
     }
 
     MouseArea {
