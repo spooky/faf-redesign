@@ -12,9 +12,9 @@ Rectangle {
     width: 200
     height: 100
     color: mouseArea.containsMouse ? highlightColor : "transparent"
+    radius: height*0.15
     // border.color: altColor
     // border.width: 2
-    radius: height*0.15
 
     Image {
         source: "icons/plus.svg"
@@ -47,6 +47,6 @@ Rectangle {
         id: mouseArea
         anchors.fill: parent
         hoverEnabled: true
-        onClicked: wrapper.clicked()
+        onDoubleClicked: wrapper.clicked()
     }
 }

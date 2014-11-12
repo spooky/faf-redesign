@@ -175,5 +175,12 @@ class LoginViewModel(QObject):
         s.endGroup()
 
 
-class GameViewModel(QObject):
-    pass
+class GamesViewModel(QObject):
+    hostGame = pyqtSignal()
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.hostGame.connect(self.on_hostGame)
+
+    def on_hostGame(self):
+        pass

@@ -6,7 +6,7 @@ from PyQt5.QtQuick import QQuickItem
 
 import settings
 from utils.async import async_slot
-from view_models import MainWindowViewModel, LoginViewModel
+from view_models import MainWindowViewModel, LoginViewModel, GamesViewModel
 from session.Client import Client
 
 
@@ -46,10 +46,12 @@ class MainWindow(QObject):
 
         self.model = MainWindowViewModel(self)
         self.loginModel = LoginViewModel(self.client, self.user, self.password, self.remember, self)
+        self.gamesModel = GamesViewModel(self)
 
         self.engine = QQmlApplicationEngine(self)
-        self.engine.rootContext().setContextProperty('model', self.model)
+        self.engine.rootContext().setContextProperty('windowModel', self.model)
         self.engine.rootContext().setContextProperty('loginModel', self.loginModel)
+        self.engine.rootContext().setContextProperty('contentModel', self.gamesModel)
         self.engine.quit.connect(parent.quit)
         self.engine.load(QUrl.fromLocalFile('ui/Chrome.qml'))
 

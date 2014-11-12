@@ -345,18 +345,7 @@ Window {
             color: "#202025"
             anchors.fill: parent
 
-            Grid {
-                anchors.fill: parent
-                anchors.margins: 5
-                spacing: 5
-
-                NewGame {
-                    textColor: root.textColor
-                    altColor: root.altHighlightColor
-                    highlightColor: root.highlightColor
-                }
-            }
-
+            Games { }
         }
     }
 
@@ -371,7 +360,7 @@ Window {
 
         Label {
             id: label
-            text: model.label
+            text: windowModel.label
             color: root.altHighlightColor
             anchors.left: parent.left
             anchors.bottom: parent.bottom
@@ -380,7 +369,7 @@ Window {
 
         Row {
             id: status
-            visible: model.taskRunning
+            visible: windowModel.taskRunning
             anchors.right: resizer.left
             anchors.bottom: parent.bottom
             anchors.rightMargin: 2*5
@@ -389,16 +378,16 @@ Window {
 
             Label {
                 id: actionLabel
-                text: model.taskStatusText
+                text: windowModel.taskStatusText
                 color: root.textColor
             }
 
             ProgressBar {
-                visible: !model.taskStatusIsIndefinite
+                visible: !windowModel.taskStatusIsIndefinite
                 width: visible ? 128 : 0
                 height: actionLabel.height / 2
                 anchors.verticalCenter: parent.verticalCenter
-                value: model.taskStatusProgress
+                value: windowModel.taskStatusProgress
                 style: ProgressBarStyle {
                     background: Rectangle {
                         color: "transparent"
