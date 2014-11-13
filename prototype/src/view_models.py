@@ -1,5 +1,5 @@
 import logging
-from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal
+from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal, pyqtSlot
 from utils.async import async_slot
 
 
@@ -91,10 +91,10 @@ class LoginViewModel(QObject):
         self.login.connect(self.on_login)
         self.logout.connect(self.on_logout)
         self.client = client
-        self.user = user
-        self.password = password
-        self.remember = remember
-        self.logged_in = False
+        self._user = user
+        self._password = password
+        self._remember = remember
+        self._logged_in = False
 
     user_changed = pyqtSignal(str)
 
@@ -141,6 +141,7 @@ class LoginViewModel(QObject):
         self.logged_in_changed.emit(value)
 
     @async_slot
+    @pyqtSlot(str, str, bool)
     def on_login(self, user, password, remember):
         try:
             import hashlib
@@ -154,6 +155,7 @@ class LoginViewModel(QObject):
             self.log.warn('login failed: {}'.format(ex))
 
     @async_slot
+    @pyqtSlot()
     def on_logout(self):
         try:
             self.log.info('logging out...')
@@ -182,5 +184,6 @@ class GamesViewModel(QObject):
         super().__init__(parent)
         self.hostGame.connect(self.on_hostGame)
 
+    @pyqtSlot()
     def on_hostGame(self):
         pass

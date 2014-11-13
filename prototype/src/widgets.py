@@ -1,5 +1,5 @@
 import logging
-from PyQt5.QtCore import QObject, QUrl, pyqtSignal
+from PyQt5.QtCore import QObject, QUrl, pyqtSignal, pyqtSlot
 from PyQt5.QtQml import QQmlApplicationEngine
 from PyQt5.QtGui import QGuiApplication, QIcon
 from PyQt5.QtQuick import QQuickItem
@@ -83,6 +83,7 @@ class MainWindow(QObject):
         except Exception as e:
             self.log.error('autologin failed. {}'.format(e))
 
+    @pyqtSlot(str)
     def _log(self, msg):
         # replace with collections.deque binding(ish)?
         if self.console.property('lineCount') == LOG_BUFFER_SIZE:
