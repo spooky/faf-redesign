@@ -8,10 +8,16 @@ Rectangle {
     property string textColor
     property int padding: 5
 
+    function login() {
+        loginModel.login(userName.text, password.text, remember.checked)
+    }
+
     id: wrapper
     color: background
     width: childrenRect.width + 2*padding
     height: childrenRect.height + 2*padding
+    Keys.onReturnPressed: login()
+    Keys.onEscapePressed: loginModel.panel_visible = false
 
     Column {
         spacing: padding
@@ -64,7 +70,7 @@ Rectangle {
                 text: qsTr("Log In")
                 anchors.right: parent.right
                 anchors.verticalCenter: parent.verticalCenter
-                onClicked: loginModel.login(userName.text, password.text, remember.checked) // is that how you do it?
+                onClicked: login()
             }
         }
     }
