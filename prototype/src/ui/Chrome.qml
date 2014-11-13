@@ -116,11 +116,8 @@ Window {
                 anchors.right: windowControls.left
                 background: root.highlightColor
                 hover: root.altHighlightColor
-                onClicked: {
-                    var f = userPanel.visible;
-                    userPanel.visible = !f
-                    state = f ? "closed" : "open"
-                }
+                state: loginModel.panel_visible ? "open" : "closed"
+                onClicked: loginModel.panel_visible = !loginModel.panel_visible
         }
 
         Row {
@@ -214,7 +211,7 @@ Window {
 
     Item {
         id: userPanel
-        visible: false
+        visible: loginModel.panel_visible
         x: user.mapFromItem(user, user.x, 0).x - (width - user.width) + borderResizeHook.border.width // absolute positioning to user control's right
         y: user.mapFromItem(user, 0, user.y).y + user.height + borderResizeHook.border.width // absolute positioning to user control's bottom
         z: 500

@@ -46,6 +46,7 @@ class MainWindow(QObject):
 
         self.model = MainWindowViewModel(self)
         self.loginModel = LoginViewModel(self.client, self.user, self.password, self.remember, self)
+        self.loginModel.panel_visible = not self.remember
         self.gamesModel = GamesViewModel(self)
 
         self.engine = QQmlApplicationEngine(self)

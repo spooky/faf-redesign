@@ -95,6 +95,7 @@ class LoginViewModel(QObject):
         self._password = password
         self._remember = remember
         self._logged_in = False
+        self._panel_visible = False
 
     user_changed = pyqtSignal(str)
 
@@ -140,6 +141,17 @@ class LoginViewModel(QObject):
         self._logged_in = value
         self.logged_in_changed.emit(value)
 
+    panel_visible_changed = pyqtSignal(bool)
+
+    @pyqtProperty(bool, notify=panel_visible_changed)
+    def panel_visible(self):
+        return self._panel_visible
+
+    @panel_visible.setter
+    def panel_visible(self, value):
+        self._panel_visible = value
+        self.panel_visible_changed.emit(value)
+
     @async_slot
     @pyqtSlot(str, str, bool)
     def on_login(self, user, password, remember):
@@ -149,6 +161,7 @@ class LoginViewModel(QObject):
 
             self.log.info('logging in...')
             self.logged_in = yield from self.client.login(user, pass_hash)
+            self.panel_visible = not self.logged_in
             self._store_credentials(user, pass_hash, remember)
             self.log.debug('login successful? {}'.format(self.logged_in))
         except Exception as ex:
