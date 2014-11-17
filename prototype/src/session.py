@@ -5,7 +5,7 @@ import asyncio
 from PyQt5.QtCore import QObject
 
 import settings
-from . import rest
+from utils import rest
 
 
 class Client(QObject):
