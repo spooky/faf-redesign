@@ -18,7 +18,6 @@ class Application(QGuiApplication):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        settings.init(self)
         try:
             self.setWindowIcon(QIcon('ui/icons/faf.ico'))
         except AttributeError:

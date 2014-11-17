@@ -1,8 +1,8 @@
 import sys
-import json
 import logging
 import logging.config
 import asyncio
+import settings
 from widgets import Application
 from quamash import QEventLoop
 
@@ -15,8 +15,7 @@ except ImportError:
 
 def configureLogging():
     try:
-        with open('logging.json') as config:
-            logging.config.dictConfig(json.load(config))
+        logging.config.dictConfig(settings.LOGGING)
     except:
         from utils.logging import QtHandler
         logging.basicConfig(level=logging.WARNING, handlers=[QtHandler()])
@@ -24,6 +23,7 @@ def configureLogging():
 
 if __name__ == '__main__':
     app = Application(sys.argv)
+    settings.init(app)
 
     configureLogging()
     log = logging.getLogger(__name__)
