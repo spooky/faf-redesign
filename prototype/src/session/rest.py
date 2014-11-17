@@ -13,7 +13,7 @@ def request(*args, **kwargs):
         error = None
         try:
             error = yield from response.json()
-        except:
+        except ValueError:
             error = yield from response.text()
 
         raise ServerError(error)
