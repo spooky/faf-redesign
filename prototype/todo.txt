@@ -1,5 +1,4 @@
 * error messages ui
-* settings file
 * game list
 * main menu
 * action menu
